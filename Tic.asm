@@ -29,8 +29,8 @@ dseg	segment para public 'data'
 
 		Car				db	32	; Guarda um caracter do Ecran 
 		Cor				db	7	; Guarda os atributos de cor do caracter
-		POSy			db	0	; a linha pode ir de [1 .. 25]
-		POSx			db	0	; POSx pode ir [1..80]	
+		POSy			db	2	; a linha pode ir de [1 .. 25]
+		POSx			db	23	; POSx pode ir [1..80]	
 
 dseg	ends
 
@@ -266,8 +266,8 @@ Main  proc
 		goto_xy		0,0				;Mudar as coordenadas de inicio
 		call		IMP_FICH_NOMES
 		call 		AVATAR
-		goto_xy		23,2
-		call 		AVATAR			;Mudar as coordenadas de inicio
+		goto_xy		23,2			;Mudar as coordenadas de inicio
+		call 		AVATAR			
 		call		IMP_FICH		;Abre o ficheiro de texto
 		call 		AVATAR
 		goto_xy		0,22
