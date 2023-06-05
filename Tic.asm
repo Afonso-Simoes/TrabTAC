@@ -263,10 +263,11 @@ Main  proc
 		mov			es,ax
 		
 		call		apaga_ecran
-		goto_xy		0,0
+		goto_xy		0,0				;Mudar as coordenadas de inicio
 		call		IMP_FICH_NOMES
 		call 		AVATAR
-		goto_xy		0,0 			;Mudar as coordenadas de inicio
+		goto_xy		23,2
+		call 		AVATAR			;Mudar as coordenadas de inicio
 		call		IMP_FICH		;Abre o ficheiro de texto
 		call 		AVATAR
 		goto_xy		0,22
