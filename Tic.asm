@@ -218,14 +218,21 @@ CICLO:
 			int		21H			
 	
 			goto_xy	POSx,POSy	; Vai para posi��o do cursor
-		
-LER_SETA:	call 	LE_TECLA
+			
+			mov 	ch, Fases_jogo
+			cmp 	ch, 0
+			je 		LER_SETA_NOMES
+			cmp 	ch, 1
+			je		LER_SETA
+			jmp 	fim
+LER_SETA:	
+			call 	LE_TECLA
 			cmp		ah, 1
 			je		ESTEND
-			CMP 	AL, 27		; ESCAPE
+			CMP 	AL, 27		; ESCAPE para sair
 			JE		FIM
-			CMP     AL, 48			; Compara para ver se é '0' ZERO e se for o jogador joga
-			JE		JOGADA
+			CMP     AL, 48		; Compara para ver se é '0' ZERO e se for o jogador joga
+			;JE		JOGADA
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
 			cmp		CL, 32		; S� escreve se for espa�o em branco
@@ -242,23 +249,23 @@ LER_SETA_NOMES:
 			call 	LE_TECLA
 			cmp		ah, 1
 			je		ESTEND
-			CMP 	AL, 27		; ESCAPE
+			CMP 	AL, 27		; ESCAPE para sair
 			JE		FIM
 			CMP     AL, 49		; '1' UM Para confirmar o nome ou para avançar para o jogo
 			JE		CONFIRMA_NOME			
-			CMP     AL, 48			; Compara para ver se apaga usando o '0'
+			CMP     AL, 48		; Compara para ver se apaga usando o '0'
 			JE		DELETE
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
 			cmp		CL, 32		; S� escreve se for espa�o em branco
-			JNE 	LER_SETA
+			JNE 	LER_SETA_NOMES
 			mov		ah, 02h		; coloca o caracter lido no ecra
 			mov		dl, al
 			inc		POSx		;Direita
 			int		21H	
 			goto_xy	POSx,POSy
 			
-			jmp		LER_SETA
+			jmp		LER_SETA_NOMES
 CONFIRMA_NOME:
 			mov 	ch, Menu_nomes
 			cmp 	ch, 2
@@ -275,16 +282,19 @@ COMECA_JOGO:
 
 			jmp 	fim
 CONFIRMA_JOGADOR2:
-			jmp 	fim
-
-CONFIRMA_JOGADOR1:
-			jmp 	fim
-
-DELETE:
-			mov		ah, 20h		; coloca o caracter lido no ecra
-			mov		dl, 20h		; Espaço vazio
 			jmp 	CICLO
 
+CONFIRMA_JOGADOR1:
+			jmp 	CICLO
+
+DELETE:
+			mov		ah, 09h		; Function: Write character with attribute
+			mov		al, 20h		; ASCII code for space
+			mov		bh, 00h		; Page number (0)
+			mov		bl, 07h		; Attribute: white on black
+			mov		cx, 0001h	; Number of times to write the character
+			int		10h			; Video interrupt
+			jmp		CICLO
 
 
 ESTEND:		cmp 	al,48h
@@ -305,7 +315,8 @@ ESQUERDA:
 
 DIREITA:
 			cmp		al,4Dh
-			jne		LER_SETA 
+			jne		CICLO
+			;jne		LER_SETA 
 			inc		POSx		;Direita
 			jmp		CICLO
 
