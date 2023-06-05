@@ -23,7 +23,15 @@ dseg	segment para public 'data'
         Erro_Close      db      'Erro ao tentar fechar o ficheiro$'
         Fich         	db      'jogo.TXT',0
 		Fich_nomes		db		'nomes.TXT',0
+		Player1			db		?
+		PLayer2			db		?
         HandleFich      dw      0
+		Menu_nomes		db		0		;0 Ainda não foi escrito o nome do primeiro jogador
+										;1 Já foi escrito o nome do primeiro mas não o do segundo
+										;2 Já foram escritos os 2 e pode começar o jogo
+
+		Fases_jogo		db		0		;0 O jogo está na fase de pedir os nomes
+										;1 o jogo está na fase de jogar
         car_fich        db      ?
 
 
@@ -146,6 +154,7 @@ ler_ciclo:
 		jc		erro_ler
 		cmp		ax,0		;EOF?
 		je		fecha_ficheiro
+
         mov     ah,02h
 		mov		dl,car_fich
 		int		21h
@@ -215,18 +224,69 @@ LER_SETA:	call 	LE_TECLA
 			je		ESTEND
 			CMP 	AL, 27		; ESCAPE
 			JE		FIM
+			CMP     AL, 48			; Compara para ver se é '0' ZERO e se for o jogador joga
+			JE		JOGADA
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
 			cmp		CL, 32		; S� escreve se for espa�o em branco
 			JNE 	LER_SETA
 			mov		ah, 02h		; coloca o caracter lido no ecra
 			mov		dl, al
+			inc		POSx		;Direita
 			int		21H	
 			goto_xy	POSx,POSy
 			
+			jmp		LER_SETA
+
+LER_SETA_NOMES:
+			call 	LE_TECLA
+			cmp		ah, 1
+			je		ESTEND
+			CMP 	AL, 27		; ESCAPE
+			JE		FIM
+			CMP     AL, 49		; '1' UM Para confirmar o nome ou para avançar para o jogo
+			JE		CONFIRMA_NOME			
+			CMP     AL, 48			; Compara para ver se apaga usando o '0'
+			JE		DELETE
+			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
+			mov		CL, Car
+			cmp		CL, 32		; S� escreve se for espa�o em branco
+			JNE 	LER_SETA
+			mov		ah, 02h		; coloca o caracter lido no ecra
+			mov		dl, al
+			inc		POSx		;Direita
+			int		21H	
+			goto_xy	POSx,POSy
 			
 			jmp		LER_SETA
-		
+CONFIRMA_NOME:
+			mov 	ch, Menu_nomes
+			cmp 	ch, 2
+			je      COMECA_JOGO
+			cmp     ch, 1
+			je		CONFIRMA_JOGADOR2
+			cmp 	ch, 0
+			je		CONFIRMA_JOGADOR1
+			jmp		fim
+
+
+COMECA_JOGO:
+			;passar para o ficheiro do jogo
+
+			jmp 	fim
+CONFIRMA_JOGADOR2:
+			jmp 	fim
+
+CONFIRMA_JOGADOR1:
+			jmp 	fim
+
+DELETE:
+			mov		ah, 20h		; coloca o caracter lido no ecra
+			mov		dl, 20h		; Espaço vazio
+			jmp 	CICLO
+
+
+
 ESTEND:		cmp 	al,48h
 			jne		BAIXO
 			dec		POSy		;cima
@@ -255,6 +315,26 @@ AVATAR		endp
 
 
 ;########################################################################
+;Bloquear o personagem num quadrado
+BLOQUEIA PROC
+			
+BLOQ_ESQERDA:
+
+BLOQ_DIREITA:
+
+
+BLOQ_CIMA:
+
+
+BLOQ_BAIXO:
+
+
+fim:	
+		RET
+
+BLOQUEIA endp 
+
+;########################################################################
 Main  proc
 		mov			ax, dseg
 		mov			ds,ax
@@ -264,10 +344,10 @@ Main  proc
 		
 		call		apaga_ecran
 		goto_xy		0,0				;Mudar as coordenadas de inicio
-		call		IMP_FICH_NOMES
-		call 		AVATAR
-		goto_xy		23,2			;Mudar as coordenadas de inicio
-		call 		AVATAR			
+		call		IMP_FICH_NOMES    ;Abre o ficheiro dos nomes
+		call 		AVATAR		
+		call		BLOQUEIA		;Chama a função que vai bloquear o cursor de sair de um espaço
+		call		apaga_ecran
 		call		IMP_FICH		;Abre o ficheiro de texto
 		call 		AVATAR
 		goto_xy		0,22
