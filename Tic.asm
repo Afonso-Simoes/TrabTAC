@@ -205,7 +205,7 @@ AVATAR	PROC
 			mov		ax,0B800h
 			mov		es,ax
 CICLO:			
-			goto_xy	POSx,POSy		; Vai para nova possi��o
+			goto_xy	POSx,POSy		; Vai para nova posi��o
 			mov 	ah, 08h
 			mov		bh,0			; numero da p�gina
 			int		10h		
