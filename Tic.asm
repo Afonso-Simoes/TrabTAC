@@ -235,6 +235,10 @@ LER_SETA:
 			;JE		JOGADA
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
+			cmp 	CL, "#"
+			je		BLOQUEIA_MOVIMENTO
+			cmp 	CL, ":"
+			je		BLOQUEIA_MOVIMENTO
 			cmp		CL, 32		; S� escreve se for espa�o em branco
 			JNE 	LER_SETA
 			mov		ah, 02h		; coloca o caracter lido no ecra
@@ -266,6 +270,10 @@ LER_SETA_NOMES:
 			goto_xy	POSx,POSy
 			
 			jmp		LER_SETA_NOMES
+
+			
+
+
 CONFIRMA_NOME:
 			mov 	ch, Menu_nomes
 			cmp 	ch, 2
@@ -296,6 +304,21 @@ DELETE:
 			int		10h			; Video interrupt
 			jmp		CICLO
 
+BLOQUEIA_MOVIMENTO:
+			mov 	al, POSx
+			cmp 	al, 23
+			je 		INCREMENTA_POSX
+			cmp 	al, 40
+			je 		DECREMENTA_POSX
+			jmp     LER_SETA_NOMES
+				
+INCREMENTA_POSX:
+			inc		POSx
+			jmp		LER_SETA_NOMES
+
+DECREMENTA_POSX:
+			dec		POSx
+			jmp		LER_SETA_NOMES
 
 ESTEND:		cmp 	al,48h
 			jne		BAIXO
