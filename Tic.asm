@@ -215,7 +215,7 @@ CICLO:
 			goto_xy	78,0			; Mostra o caractr que estava na posi��o do AVATAR
 			mov		ah, 02h			; IMPRIME caracter da posi��o no canto
 			mov		dl, Car	
-			int		21H			
+			int		21H	
 	
 			goto_xy	POSx,POSy	; Vai para posi��o do cursor
 			
