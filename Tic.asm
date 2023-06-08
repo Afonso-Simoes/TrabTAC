@@ -25,6 +25,8 @@ dseg	segment para public 'data'
 		PLayer2_nome	db		'???????????????????????????$'
 		Player1			db		'X'
 		PLayer2			db		'O'
+		Simbolo1		db      'X'
+		Simbolo2		db      'O'
         HandleFich      dw      0
 		Menu_nomes		db		0		;0 Ainda não foi escrito o nome do primeiro jogador
 										;1 Já foi escrito o nome do primeiro mas não o do segundo
@@ -38,6 +40,7 @@ dseg	segment para public 'data'
 
 		car_fich        db      ?
 
+		ultimo_num_aleat dw 	0
 
 		Car				db	32	; Guarda um caracter do Ecran 
 		Cor				db	7	; Guarda os atributos de cor do caracter
@@ -246,8 +249,6 @@ LER_SETA:
 			;JE		JOGADA
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
-			cmp 	CL, "#"
-			;je		BLOQUEIA_MOVIMENTO
 			cmp		CL, 32		; S� escreve se for espa�o em branco
 			JNE 	LER_SETA
 			mov		ah, 02h		; coloca o caracter lido no ecra
@@ -265,8 +266,6 @@ LER_SETA_NOMES:
 			call 	LE_TECLA
 			cmp		ah, 1
 			je		ESTEND
-			; CMP 	AL, 27		; ESCAPE para sair
-			; JE		FIM
 			CMP     AL, 49		; '1' UM Para confirmar o nome ou para avançar para o jogo
 			JE		CONFIRMA_NOME			
 			CMP     AL, 48		; Compara para ver se apaga usando o '0'
@@ -304,12 +303,6 @@ INICIAR:
 		inc 	Fases_jogo		;mudar o numero da fase do jogo
 		mov     Menu_nomes, 0
 		jmp 	fim
-
-; COMECA_JOGO:
-			; ;inc 	Fases_jogo		;mudar o numero da fase do jogo
-			; ; mov     Menu_nomes, 0
-
-			; jmp 	fim			;passar para o ficheiro do jogo
 
 CICLO_GUARDA_NOMES2:
 			goto_xy POSx, POSy
@@ -378,23 +371,6 @@ DELETE:
 			dec 	POSx
 			jmp		CICLO
 
-; DELETE:
-; 			mov 	al, POSx
-; 			cmp 	al, 24
-; 			je		CICLO
-; 			dec 	POSx
-; 			mov		ah, 09h		; Function: Write character with attribute
-; 			mov		al, 20h		; ASCII code for space
-; 			mov		bh, 00h		; Page number (0)
-; 			mov		bl, 07h		; Attribute: white on black
-; 			mov		cx, 0001h	; Number of times to write the character
-; 			int		10h			; Video interrupt
-; 			; mov 	al, POSx
-; 			; cmp 	al, 23
-; 			; je		CICLO
-; 			; dec 	POSx
-; 			jmp		CICLO
-
 BLOQUEIA_MOVIMENTO_NOMES:
 			mov 	al, POSx
 			cmp 	al, 24
@@ -460,6 +436,42 @@ DIREITA:
 			inc		POSx		;Direita
 			jmp		CICLO
 
+; ESTEND_JOGO:		;Verificar se pode andar
+; 			mov 	cl, Menu_nomes
+; 			cmp 	cl, 2
+; 			je 		CICLO
+; 			mov 	cl, POSy
+; 			cmp 	cl, 2
+; 			je 		ESQUERDA_JOGO
+; 			cmp 	al,48h
+; 			jne		BAIXO_JOGO
+; 			dec		POSy		;cima
+; 			jmp		CICLO
+
+; BAIXO_JOGO:		cmp		al,50h
+; 			jne		ESQUERDA_JOGO
+; 			inc 	POSy		;Baixo
+; 			jmp		CICLO
+
+; ESQUERDA_JOGO:
+; 			mov 	cl, POSx
+; 			cmp 	cl, 24
+; 			je 		DIREITA_JOGO
+; 			cmp		al,4Bh
+; 			jne		DIREITA_JOGO
+; 			dec		POSx		;Esquerda
+; 			jmp		CICLO
+
+; DIREITA_JOGO:
+; 			mov 	cl, POSx
+; 			cmp 	cl, 51
+; 			je 		CICLO
+; 			cmp		al,4Dh
+; 			jne		CICLO
+; 			;jne		LER_SETA 
+; 			inc		POSx		;Direita
+; 			jmp		CICLO
+
 fim:				
 			RET
 AVATAR		endp
@@ -475,22 +487,37 @@ IMP_NOMES_JOGO PROC
 					mov     POSy, 4
 					cmp     al, 1
 					je      JOGADOR2
+					mov		POSx, 15
+					mov 	POSy, 7
 					jmp     fim
 
 JOGADOR1:
 		goto_xy POSx, POSy
-		mov 		  dl, Player1_nome   	; Load the address of the 'Player' string into the DX register
-		mov 		  ah, 09h      		; Set the function to display a string
-		int 		  21h          		; Call interrupt 21h to print the string
-		inc           Escreve_nomes
-		jmp           IMP_NOMES_JOGO
+		mov dl, 'X'            ; Print 'X' character
+		mov ah, 02h            ; Set the function to display a character
+		int 21h                ; Call interrupt 21h to print the character
+		inc POSx               ; Increment POSx to move the cursor position
+		mov dl, '-'            ; Print '-' character
+		int 21h                ; Call interrupt 21h to print the character
+		lea dx, Player1_nome   ; Load the address of the 'Player1_nome' string into the DX register
+		mov ah, 09h            ; Set the function to display a string
+		int 21h                ; Call interrupt 21h to print the string
+		inc Escreve_nomes
+		jmp IMP_NOMES_JOGO
+
 JOGADOR2:
 		goto_xy POSx, POSy
-		mov 		  dl, Player1_nome   	; Load the address of the 'Player' string into the DX register
-		mov 		  ah, 09h      		; Set the function to display a string
-		int 		  21h          		; Call interrupt 21h to print the string
-		inc           Escreve_nomes
-		jmp 		  IMP_FICH_NOMES
+		mov dl, 'O'            ; Print 'O' character
+		mov ah, 02h            ; Set the function to display a character
+		int 21h                ; Call interrupt 21h to print the character
+		inc POSx               ; Increment POSx to move the cursor position
+		mov dl, '-'            ; Print '-' character
+		int 21h                ; Call interrupt 21h to print the character
+		lea dx, Player2_nome   ; Load the address of the 'Player2_nome' string into the DX register
+		mov ah, 09h            ; Set the function to display a string
+		int 21h                ; Call interrupt 21h to print the string
+		inc Escreve_nomes
+		jmp IMP_NOMES_JOGO
 
 fim:
 	RET
@@ -505,8 +532,50 @@ fim:
 	RET
 ATRIBUI_SIMBOLO endp
 
+; ####################################################################
+CalcAleat proc near
 
+	sub	sp,2
+	push	bp
+	mov	bp,sp
+	push	ax
+	push	cx
+	push	dx	
+	mov	ax,[bp+4]
+	mov	[bp+2],ax
 
+	mov	ah,00h
+	int	1ah
+
+	add	dx,ultimo_num_aleat
+	add	cx,dx	
+	mov	ax,65521
+	push	dx
+	mul	cx
+	pop	dx
+	xchg	dl,dh
+	add	dx,32749
+	add	dx,ax
+
+	mov	ultimo_num_aleat,dx
+
+	mov	[BP+4],dx
+
+	pop	dx
+	pop	cx
+	pop	ax
+	pop	bp
+	ret
+CalcAleat endp
+; ######################################################################
+JOGADA PROC
+			goto_xy	POSx, POSy
+
+			jmp		fim
+		
+fim:
+	RET
+JOGADA endp
 ;########################################################################
 Main  proc
 		mov			ax, dseg
@@ -519,10 +588,12 @@ Main  proc
 		goto_xy		0,0				;Mudar as coordenadas de inicio
 		call		IMP_FICH_NOMES    ;Abre o ficheiro dos nomes
 		call 		AVATAR		
-		call        ATRIBUI_SIMBOLO      ;Atribui o simbolo de forma aleatória aos jogadores
+		; call		CalcAleat
+		; pop			ax ; vai buscar 'a pilha o numero aleatorio
+		; call        ATRIBUI_SIMBOLO      ;Atribui o simbolo de forma aleatória aos jogadores
 		call		apaga_ecran
 		call		IMP_FICH		;Abre o ficheiro de texto e imprime
-		;call        IMP_NOMES_JOGO		;Escreve o nome dos jogadores e os seus simbolos
+		call        IMP_NOMES_JOGO		;Escreve o nome dos jogadores e os seus simbolos
 		call 		AVATAR
 		goto_xy		0,22
 		
