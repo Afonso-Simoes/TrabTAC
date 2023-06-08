@@ -261,6 +261,10 @@ LER_SETA_NOMES:
 			JE		DELETE
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
+			cmp 	CL, "#"
+			je		BLOQUEIA_MOVIMENTO
+			cmp 	CL, ":"
+			je		BLOQUEIA_MOVIMENTO
 			cmp		CL, 32		; S� escreve se for espa�o em branco
 			JNE 	LER_SETA_NOMES
 			mov		ah, 02h		; coloca o caracter lido no ecra
@@ -296,6 +300,10 @@ CONFIRMA_JOGADOR1:
 			jmp 	CICLO
 
 DELETE:
+			mov 	al, POSx
+			cmp 	al, 22
+			je		CICLO
+			dec 	POSx
 			mov		ah, 09h		; Function: Write character with attribute
 			mov		al, 20h		; ASCII code for space
 			mov		bh, 00h		; Page number (0)
@@ -308,8 +316,13 @@ BLOQUEIA_MOVIMENTO:
 			mov 	al, POSx
 			cmp 	al, 23
 			je 		INCREMENTA_POSX
-			cmp 	al, 40
+			cmp 	al, 51
 			je 		DECREMENTA_POSX
+			mov 	al, POSy
+			cmp 	al, 2
+			je		INCREMENTA_POSY
+			cmp 	al, 4
+			je      DECREMENTA_POSY
 			jmp     LER_SETA_NOMES
 				
 INCREMENTA_POSX:
@@ -319,6 +332,14 @@ INCREMENTA_POSX:
 DECREMENTA_POSX:
 			dec		POSx
 			jmp		LER_SETA_NOMES
+
+INCREMENTA_POSY:
+			inc		POSy
+			jmp		LER_SETA_NOMES
+	
+DECREMENTA_POSY:
+			dec 	POSy
+			jmp 	LER_SETA_NOMES
 
 ESTEND:		cmp 	al,48h
 			jne		BAIXO
