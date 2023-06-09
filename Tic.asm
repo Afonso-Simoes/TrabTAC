@@ -44,6 +44,37 @@ dseg	segment para public 'data'
 		ultimo_num_aleat dw 	0
 		num_jogadas     db      80
 
+		combinacao1     db      1, 1, 1, ?, ?, ?, ?, ?, ?
+		combinacao2     db      ?, ?, ?, 1, 1, 1, ?, ?, ?						;#############
+		combinacao3     db      ?, ?, ?, ?, ?, ?, 1, 1, 1						;# 1 # 2 # 3 #
+		combinacao4     db      1, ?, ?, 1, ?, ?, 1, ?, ?                       ;#############
+		combinacao5     db      ?, 1, ?, ?, 1, ?, ?, 1, ?						;# 4 # 5 # 6 #
+		combinacao6     db      ?, ?, 1, ?, ?, 1, ?, ?, 1						;#############
+		combinacao7     db      1, ?, ?, ?, 1, ?, ?, ?, 1						;# 7 # 8 # 9 #
+		combinacao8     db      ?, ?, 1, ?, 1, ?, 1, ?, ?						;#############
+
+		tabuleiro1_X      db      9 dup(?)
+		tabuleiro2_X      db      9 dup(?)
+		tabuleiro3_X      db      9 dup(?)
+		tabuleiro4_X      db      9 dup(?)
+		tabuleiro5_X      db      9 dup(?)
+		tabuleiro6_X      db      9 dup(?)
+		tabuleiro7_X      db      9 dup(?)
+		tabuleiro8_X      db      9 dup(?)
+		tabuleiro9_X      db      9 dup(?)
+
+		tabuleiro1_O      db      9 dup(?)
+		tabuleiro2_O      db      9 dup(?)
+		tabuleiro3_O      db      9 dup(?)
+		tabuleiro4_O      db      9 dup(?)
+		tabuleiro5_O      db      9 dup(?)
+		tabuleiro6_O      db      9 dup(?)
+		tabuleiro7_O      db      9 dup(?)
+		tabuleiro8_O      db      9 dup(?)
+		tabuleiro9_O      db      9 dup(?)
+
+		jogoAtual       db      5                            ;Varia de 1 a 9 e é a referencia a cada tabuleiro
+
 		Car				db	32	; Guarda um caracter do Ecran 
 		Cor				db	7	; Guarda os atributos de cor do caracter
 		POSy			db	2	; a linha pode ir de [1 .. 25]
@@ -248,7 +279,7 @@ LER_SETA:
 			CMP 	AL, 27		; ESCAPE para sair
 			JE		fim
 			CMP     AL, 48		; Compara para ver se é '0' ZERO e se for o jogador joga
-			je   	JOGADA	
+			je   	MOSTRA_JOGADA	
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			; mov		CL, Car
 			; cmp		CL, 32		; S� escreve se for espa�o em branco
@@ -440,20 +471,38 @@ DIREITA:
 			jmp		CICLO
 
 
-JOGADA:
-			goto_xy	POSx, POSy
-
-			jmp     MOSTRA_JOGADA
-
-			;jmp 	PROCURA_VITORIA
-
 MOSTRA_JOGADA:
+			goto_xy	POSx, POSy
 			mov		CL, Car
 			cmp		CL, 32		; S� escreve se for espa�o em branco
 			JNE     CICLO
 			mov		ah, 02h		; coloca o caracter lido no ecra
 			mov		dl, [JogadorAtual]
 			int		21H	
+			jmp 	PROCURA_VITORIA
+
+PROCURA_VITORIA:
+			xor     si, si
+			mov     al, jogoAtual
+			cmp     al, 1
+			je      PROCURA_VITORIA_TAB_1
+			cmp     al, 2
+			je      PROCURA_VITORIA_TAB_2
+			cmp     al, 3
+			je      PROCURA_VITORIA_TAB_3
+			cmp     al, 4
+			je      PROCURA_VITORIA_TAB_4
+			cmp     al, 5
+			je      PROCURA_VITORIA_TAB_5
+			cmp     al, 6
+			je      PROCURA_VITORIA_TAB_6
+			cmp     al, 7
+			je      PROCURA_VITORIA_TAB_7
+			cmp     al, 8
+			je      PROCURA_VITORIA_TAB_8
+			cmp     al, 9
+			je      PROCURA_VITORIA_TAB_9
+
 			mov     al, num_jogadas
 			cmp     al, 0
 			je      fim
@@ -463,7 +512,6 @@ MOSTRA_JOGADA:
 			cmp 	al, 'X'
 			je      MUDA_JOGADOR_PARA_O
 			jmp     fim
-
 
 MUDA_JOGADOR_PARA_X:
 			mov 	byte ptr [JogadorAtual], 'X'
@@ -475,6 +523,84 @@ MUDA_JOGADOR_PARA_O:
 			dec     num_jogadas
 			jmp 	CICLO
 
+PROCURA_VITORIA_TAB_1:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 4
+			je      PROCURA_VITORIA_TAB_1_COLUNA_1
+			cmp     al, 6
+			je      PROCURA_VITORIA_TAB_1_COLUNA_2
+			cmp     al, 8
+			je      PROCURA_VITORIA_TAB_1_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_1_COLUNA_1:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_1_POS_1
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_1_POS_4
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_1_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_1_POS_1:
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_X
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_1_X:
+			
+
+PROCURA_VITORIA_TAB_1_POS_4:
+
+
+PROCURA_VITORIA_TAB_1_POS_7:
+
+
+
+PROCURA_VITORIA_TAB_1_COLUNA_2:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_1_POS_2
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_1_POS_5
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_1_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_1_POS_2:
+			; VER SE O JOGADOR é X ou O
+			; MUDAR a combinaçao atual do array
+
+PROCURA_VITORIA_TAB_1_POS_5:
+
+
+PROCURA_VITORIA_TAB_1_POS_8:
+
+PROCURA_VITORIA_TAB_1_COLUNA_3:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_1_POS_3
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_1_POS_6
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_1_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_1_POS_3:
+			; VER SE O JOGADOR é X ou O
+			; MUDAR a combinaçao atual do array
+
+PROCURA_VITORIA_TAB_1_POS_6:
+
+
+PROCURA_VITORIA_TAB_1_POS_9:
+
+
+
+
 ESTEND_JOGO:		;Verificar se pode andar
 			cmp 	al,48h
 			jne		BAIXO_JOGO
@@ -484,7 +610,7 @@ ESTEND_JOGO:		;Verificar se pode andar
 BAIXO_JOGO:		
 			cmp		al,50h
 			jne		ESQUERDA_JOGO
-			inc 	POSy		;Baixo
+			inc 	POSy		;Baixo 
 			jmp		CICLO
 
 ESQUERDA_JOGO:
