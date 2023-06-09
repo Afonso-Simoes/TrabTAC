@@ -27,6 +27,7 @@ dseg	segment para public 'data'
 		PLayer2			db		'O'
 		Simbolo1		db      'X'
 		Simbolo2		db      'O'
+		JogadorAtual    db      'X'
         HandleFich      dw      0
 		Menu_nomes		db		0		;0 Ainda não foi escrito o nome do primeiro jogador
 										;1 Já foi escrito o nome do primeiro mas não o do segundo
@@ -41,6 +42,7 @@ dseg	segment para public 'data'
 		car_fich        db      ?
 
 		ultimo_num_aleat dw 	0
+		num_jogadas     db      80
 
 		Car				db	32	; Guarda um caracter do Ecran 
 		Cor				db	7	; Guarda os atributos de cor do caracter
@@ -242,20 +244,19 @@ CICLO:
 LER_SETA:	
 			call 	LE_TECLA
 			cmp		ah, 1
-			je		ESTEND
+			je		ESTEND_JOGO
 			CMP 	AL, 27		; ESCAPE para sair
-			JE		FIM
+			JE		fim
 			CMP     AL, 48		; Compara para ver se é '0' ZERO e se for o jogador joga
-			;JE		JOGADA
+			je   	JOGADA	
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
-			mov		CL, Car
-			cmp		CL, 32		; S� escreve se for espa�o em branco
-			JNE 	LER_SETA
-			mov		ah, 02h		; coloca o caracter lido no ecra
-			mov		dl, al
-			inc		POSx		;Direita
-			int		21H	
-			goto_xy	POSx,POSy
+			; mov		CL, Car
+			; cmp		CL, 32		; S� escreve se for espa�o em branco
+			; JNE 	LER_SETA
+			; mov		ah, 02h		; coloca o caracter lido no ecra
+			; mov		dl, al
+			; int		21H	
+			; goto_xy	POSx,POSy
 			
 			jmp		LER_SETA
 
@@ -268,9 +269,10 @@ LER_SETA_NOMES:
 			je		ESTEND
 			CMP     AL, 49		; '1' UM Para confirmar o nome ou para avançar para o jogo
 			JE		CONFIRMA_NOME			
+			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			CMP     AL, 48		; Compara para ver se apaga usando o '0'
 			JE		DELETE
-			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
+			; goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
 			cmp 	CL, "#"
 			je		BLOQUEIA_MOVIMENTO_NOMES
@@ -412,7 +414,8 @@ ESTEND:		;Verificar se pode andar
 			dec		POSy		;cima
 			jmp		CICLO
 
-BAIXO:		cmp		al,50h
+BAIXO:		
+			cmp		al,50h
 			jne		ESQUERDA
 			inc 	POSy		;Baixo
 			jmp		CICLO
@@ -436,41 +439,67 @@ DIREITA:
 			inc		POSx		;Direita
 			jmp		CICLO
 
-; ESTEND_JOGO:		;Verificar se pode andar
-; 			mov 	cl, Menu_nomes
-; 			cmp 	cl, 2
-; 			je 		CICLO
-; 			mov 	cl, POSy
-; 			cmp 	cl, 2
-; 			je 		ESQUERDA_JOGO
-; 			cmp 	al,48h
-; 			jne		BAIXO_JOGO
-; 			dec		POSy		;cima
-; 			jmp		CICLO
 
-; BAIXO_JOGO:		cmp		al,50h
-; 			jne		ESQUERDA_JOGO
-; 			inc 	POSy		;Baixo
-; 			jmp		CICLO
+JOGADA:
+			goto_xy	POSx, POSy
 
-; ESQUERDA_JOGO:
-; 			mov 	cl, POSx
-; 			cmp 	cl, 24
-; 			je 		DIREITA_JOGO
-; 			cmp		al,4Bh
-; 			jne		DIREITA_JOGO
-; 			dec		POSx		;Esquerda
-; 			jmp		CICLO
+			jmp     MOSTRA_JOGADA
 
-; DIREITA_JOGO:
-; 			mov 	cl, POSx
-; 			cmp 	cl, 51
-; 			je 		CICLO
-; 			cmp		al,4Dh
-; 			jne		CICLO
-; 			;jne		LER_SETA 
-; 			inc		POSx		;Direita
-; 			jmp		CICLO
+			;jmp 	PROCURA_VITORIA
+
+MOSTRA_JOGADA:
+			mov		CL, Car
+			cmp		CL, 32		; S� escreve se for espa�o em branco
+			JNE     CICLO
+			mov		ah, 02h		; coloca o caracter lido no ecra
+			mov		dl, [JogadorAtual]
+			int		21H	
+			mov     al, num_jogadas
+			cmp     al, 0
+			je      fim
+			mov 	al, JogadorAtual
+			cmp 	al, 'O'
+			je      MUDA_JOGADOR_PARA_X
+			cmp 	al, 'X'
+			je      MUDA_JOGADOR_PARA_O
+			jmp     fim
+
+
+MUDA_JOGADOR_PARA_X:
+			mov 	byte ptr [JogadorAtual], 'X'
+			dec     num_jogadas
+			jmp 	CICLO
+
+MUDA_JOGADOR_PARA_O:
+			mov 	byte ptr [JogadorAtual], 'O'
+			dec     num_jogadas
+			jmp 	CICLO
+
+ESTEND_JOGO:		;Verificar se pode andar
+			cmp 	al,48h
+			jne		BAIXO_JOGO
+			dec		POSy		;cima
+			jmp		CICLO
+
+BAIXO_JOGO:		
+			cmp		al,50h
+			jne		ESQUERDA_JOGO
+			inc 	POSy		;Baixo
+			jmp		CICLO
+
+ESQUERDA_JOGO:
+			cmp		al,4Bh
+			jne		DIREITA_JOGO
+			dec		POSx		;Esquerda
+			dec		POSx
+			jmp		CICLO
+
+DIREITA_JOGO:
+			cmp		al,4Dh
+			jne		CICLO
+			inc		POSx		;Direita
+			inc		POSx
+			jmp		CICLO
 
 fim:				
 			RET
@@ -568,14 +597,7 @@ CalcAleat proc near
 	ret
 CalcAleat endp
 ; ######################################################################
-JOGADA PROC
-			goto_xy	POSx, POSy
 
-			jmp		fim
-		
-fim:
-	RET
-JOGADA endp
 ;########################################################################
 Main  proc
 		mov			ax, dseg
