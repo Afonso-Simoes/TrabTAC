@@ -720,19 +720,136 @@ ESTEND_JOGO:		;Verificar se pode andar
 			cmp 	al,48h
 			jne		BAIXO_JOGO
 			mov     cl, jogoAtual
-			;cmp     cl, 1                    ;Comparar de 1 a 9 e depois bloquear conforme
+			cmp     cl, 1                    ;Comparar de 1 a 9 e depois bloquear conforme
+			je      ESTEND_JOGO_LINHA_1
+			cmp     cl, 2                    
+			je      ESTEND_JOGO_LINHA_1
+			cmp     cl, 3                    
+			je      ESTEND_JOGO_LINHA_1
+			cmp     cl, 4                    
+			je      ESTEND_JOGO_LINHA_2
+			cmp     cl, 5                    
+			je      ESTEND_JOGO_LINHA_2
+			cmp     cl, 6                    
+			je      ESTEND_JOGO_LINHA_2
+			cmp     cl, 7                    
+			je      ESTEND_JOGO_LINHA_3
+			cmp     cl, 8                    
+			je      ESTEND_JOGO_LINHA_3
+			cmp     cl, 9                    
+			je      ESTEND_JOGO_LINHA_3
+
+
+ESTEND_JOGO_LINHA_1:
+			mov     cl, POSy
+			cmp     cl, 2
+			je      CICLO
 			dec		POSy		;cima
 			jmp		CICLO
+
+ESTEND_JOGO_LINHA_2:
+			mov     cl, POSy
+			cmp     cl, 6
+			je      CICLO
+			dec		POSy		;cima
+			jmp		CICLO
+
+ESTEND_JOGO_LINHA_3:
+			mov     cl, POSy
+			cmp     cl, 10
+			je      CICLO
+			dec		POSy		;cima
+			jmp		CICLO
+
 
 BAIXO_JOGO:		
 			cmp		al,50h
 			jne		ESQUERDA_JOGO
-			inc 	POSy		;Baixo 
+			mov     cl, jogoAtual
+			cmp     cl, 1                    ;Comparar de 1 a 9 e depois bloquear conforme
+			je      BAIXO_JOGO_LINHA_1
+			cmp     cl, 2                    
+			je      BAIXO_JOGO_LINHA_1
+			cmp     cl, 3                    
+			je      BAIXO_JOGO_LINHA_1
+			cmp     cl, 4                    
+			je      BAIXO_JOGO_LINHA_2
+			cmp     cl, 5                    
+			je      BAIXO_JOGO_LINHA_2
+			cmp     cl, 6                    
+			je      BAIXO_JOGO_LINHA_2
+			cmp     cl, 7                    
+			je      BAIXO_JOGO_LINHA_3
+			cmp     cl, 8                    
+			je      BAIXO_JOGO_LINHA_3
+			cmp     cl, 9                    
+			je      BAIXO_JOGO_LINHA_3
+
+BAIXO_JOGO_LINHA_1:
+			mov     cl, POSy
+			cmp     cl, 4
+			je      CICLO
+			inc		POSy		;baixo
 			jmp		CICLO
+
+BAIXO_JOGO_LINHA_2:
+			mov     cl, POSy
+			cmp     cl, 8
+			je      CICLO
+			inc		POSy		;baixo
+			jmp		CICLO
+
+BAIXO_JOGO_LINHA_3:
+			mov     cl, POSy
+			cmp     cl, 12
+			je      CICLO
+			inc		POSy		;baixo
+			jmp		CICLO
+
 
 ESQUERDA_JOGO:
 			cmp		al,4Bh
 			jne		DIREITA_JOGO
+			mov     cl, jogoAtual
+			cmp     cl, 1                    ;Comparar de 1 a 9 e depois bloquear conforme
+			je      ESQUERDA_JOGO_COLUNA_1
+			cmp     cl, 4                    
+			je      ESQUERDA_JOGO_COLUNA_1
+			cmp     cl, 7                    
+			je      ESQUERDA_JOGO_COLUNA_1
+			cmp     cl, 2                    
+			je      ESQUERDA_JOGO_COLUNA_2
+			cmp     cl, 5                    
+			je      ESQUERDA_JOGO_COLUNA_2
+			cmp     cl, 8                    
+			je      ESQUERDA_JOGO_COLUNA_2
+			cmp     cl, 3                    
+			je      ESQUERDA_JOGO_COLUNA_3
+			cmp     cl, 6                    
+			je      ESQUERDA_JOGO_COLUNA_3
+			cmp     cl, 9                    
+			je      ESQUERDA_JOGO_COLUNA_3
+
+ESQUERDA_JOGO_COLUNA_1:
+			mov     cl, POSx
+			cmp     cl, 4
+			je      CICLO
+			dec		POSx		;Esquerda
+			dec		POSx
+			jmp		CICLO
+
+ESQUERDA_JOGO_COLUNA_2:
+			mov     cl, POSx
+			cmp     cl, 13
+			je      CICLO
+			dec		POSx		;Esquerda
+			dec		POSx
+			jmp		CICLO
+
+ESQUERDA_JOGO_COLUNA_3:
+			mov     cl, POSx
+			cmp     cl, 22
+			je      CICLO
 			dec		POSx		;Esquerda
 			dec		POSx
 			jmp		CICLO
@@ -740,6 +857,50 @@ ESQUERDA_JOGO:
 DIREITA_JOGO:
 			cmp		al,4Dh
 			jne		CICLO
+			mov     cl, jogoAtual
+			cmp     cl, 1                    ;Comparar de 1 a 9 e depois bloquear conforme
+			je      DIREITA_JOGO_COLUNA_1
+			cmp     cl, 4                    
+			je      DIREITA_JOGO_COLUNA_1
+			cmp     cl, 7                    
+			je      DIREITA_JOGO_COLUNA_1
+			cmp     cl, 2                    
+			je      DIREITA_JOGO_COLUNA_2
+			cmp     cl, 5                    
+			je      DIREITA_JOGO_COLUNA_2
+			cmp     cl, 8                    
+			je      DIREITA_JOGO_COLUNA_2
+			cmp     cl, 3                    
+			je      DIREITA_JOGO_COLUNA_3
+			cmp     cl, 6                    
+			je      DIREITA_JOGO_COLUNA_3
+			cmp     cl, 9                    
+			je      DIREITA_JOGO_COLUNA_3
+
+			inc		POSx		;Direita
+			inc		POSx
+			jmp		CICLO
+
+DIREITA_JOGO_COLUNA_1:
+			mov     cl, POSx
+			cmp     cl, 8
+			je      CICLO
+			inc		POSx		;Direita
+			inc		POSx
+			jmp		CICLO
+
+DIREITA_JOGO_COLUNA_2:
+			mov     cl, POSx
+			cmp     cl, 17
+			je      CICLO
+			inc		POSx		;Direita
+			inc		POSx
+			jmp		CICLO
+
+DIREITA_JOGO_COLUNA_3:
+			mov     cl, POSx
+			cmp     cl, 26
+			je      CICLO
 			inc		POSx		;Direita
 			inc		POSx
 			jmp		CICLO
