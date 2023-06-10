@@ -13,4 +13,11 @@
  ##       ##       ##       ## 
  #############################
 
+        TECLAS:
+
+        ( 0 ) -> FAZER JOGADA
+
+        ( Esc ) -> SAIR DO JOGO
+
+        ( Setas ) -> NAVEGAR PELO ECRA
   

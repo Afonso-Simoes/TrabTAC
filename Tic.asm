@@ -53,27 +53,28 @@ dseg	segment para public 'data'
 		combinacao7     db      1, ?, ?, ?, 1, ?, ?, ?, 1						;# 7 # 8 # 9 #
 		combinacao8     db      ?, ?, 1, ?, 1, ?, 1, ?, ?						;#############
 
-		tabuleiro1_X      db      9 dup(?)
-		tabuleiro2_X      db      9 dup(?)
-		tabuleiro3_X      db      9 dup(?)
-		tabuleiro4_X      db      9 dup(?)
-		tabuleiro5_X      db      9 dup(?)
-		tabuleiro6_X      db      9 dup(?)
-		tabuleiro7_X      db      9 dup(?)
-		tabuleiro8_X      db      9 dup(?)
-		tabuleiro9_X      db      9 dup(?)
+		tabuleiro1_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro2_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro3_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro4_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro5_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro6_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro7_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro8_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro9_X      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
 
-		tabuleiro1_O      db      9 dup(?)
-		tabuleiro2_O      db      9 dup(?)
-		tabuleiro3_O      db      9 dup(?)
-		tabuleiro4_O      db      9 dup(?)
-		tabuleiro5_O      db      9 dup(?)
-		tabuleiro6_O      db      9 dup(?)
-		tabuleiro7_O      db      9 dup(?)
-		tabuleiro8_O      db      9 dup(?)
-		tabuleiro9_O      db      9 dup(?)
+		tabuleiro1_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro2_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro3_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro4_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro5_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro6_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro7_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro8_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		tabuleiro9_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
 
-		Vitorias        db      ?, ?, ?, ?, ?, ?, ?, ?, ?
+		Vitorias_X        db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		Vitorias_O        db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
 
 		jogoAtual       db      5                            ;Varia de 1 a 9 e é a referencia a cada tabuleiro
 		proximoTab      db      ?
@@ -249,12 +250,6 @@ AVATAR	PROC
 			mov		ax,0B800h
 			mov		es,ax
 CICLO:			
-			;Mudar a pos de inicio consoante o menu
-			
-			;##########
-			mov     cl, Menu_nomes
-			cmp     cl, 2
-			je      INICIAR
 			goto_xy	POSx,POSy		; Vai para nova posi��o
 			mov 	ah, 08h
 			mov		bh,0			; numero da p�gina
@@ -282,16 +277,13 @@ LER_SETA:
 			CMP 	AL, 27		; ESCAPE para sair
 			JE		fim
 			CMP     AL, 48		; Compara para ver se é '0' ZERO e se for o jogador joga
-			je   	MOSTRA_JOGADA_TESTES
-			; je   	MOSTRA_JOGADA	
+			je   	MOSTRA_JOGADA	
+			; je   	MOSTRA_JOGADA_TESTES
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 
 			jmp		LER_SETA
 
 LER_SETA_NOMES:
-			;Mudar a pos de inicio conseante o menu
-				
-			;##########
 			call 	LE_TECLA
 			cmp		ah, 1
 			je		ESTEND
@@ -327,11 +319,12 @@ CONFIRMA_NOME:
 			je		CONFIRMA_JOGADOR2_INICIO
 			cmp 	ch, 0
 			je		CONFIRMA_JOGADOR1_INICIO
-			jmp		fim
 
 INICIAR:
-		inc 	Fases_jogo		;mudar o numero da fase do jogo
-		mov     Menu_nomes, 0
+		mov     al, 1
+		mov 	Fases_jogo, al		;mudar o numero da fase do jogo
+		mov     al, 0
+		mov     Menu_nomes, al
 		jmp 	fim
 
 CICLO_GUARDA_NOMES2:
@@ -358,7 +351,8 @@ CONFIRMA_JOGADOR2_FIM:
 			
 			mov     POSx, 33
 			mov 	POSy, 7
-			inc 	Menu_nomes
+			mov     cl, 2
+			mov 	Menu_nomes, cl
 			jmp 	CICLO
 
 CICLO_GUARDA_NOMES1:
@@ -385,10 +379,14 @@ CONFIRMA_JOGADOR1_FIM:
 
 			mov 	POSx, 24
 			mov 	POSy, 4
-			inc 	Menu_nomes
+			mov     cl, 1
+			mov 	Menu_nomes, cl
 			jmp 	CICLO
 
 DELETE:
+			mov     al, Menu_nomes
+			cmp     al, 2
+			je      CICLO
 			mov		ah, 09h		; Function: Write character with attribute
 			mov		al, 20h		; ASCII code for space
 			mov		bh, 00h		; Page number (0)
@@ -469,6 +467,7 @@ DIREITA:
 			inc		POSx		;Direita
 			jmp		CICLO
 
+;########################### CODIGO PARA TESTES ####################################################
 MOSTRA_JOGADA_TESTES:
 			goto_xy	POSx, POSy
 			mov		CL, Car
@@ -477,40 +476,64 @@ MOSTRA_JOGADA_TESTES:
 			mov		ah, 02h				; coloca o caracter lido no ecra
 			mov		dl, [JogadorAtual]
 			int		21H	
-			jmp     MUDA_JOGADOR
+			jmp     MUDA_JOGADOR_TESTE
+
+MUDA_JOGADOR_TESTE:
+			mov     al, num_jogadas
+			cmp     al, 0
+			je      fim
+			mov 	al, JogadorAtual
+			cmp 	al, 'O'
+			je      MUDA_JOGADOR_PARA_X_TESTE
+			cmp 	al, 'X'
+			je      MUDA_JOGADOR_PARA_O_TESTE
+
+MUDA_JOGADOR_PARA_X_TESTE:
+			mov 	byte ptr [JogadorAtual], 'X'
+			dec     num_jogadas
+			jmp     CICLO
+MUDA_JOGADOR_PARA_O_TESTE:
+			mov 	byte ptr [JogadorAtual], 'O'
+			dec     num_jogadas
+			jmp     CICLO
+
+;####################################################################################################
+;##################### DAQUI PARA A FRENTE É A LOGICA DAS VITORIAS E DO JOGO  #######################
+;####################################################################################################
 
 MOSTRA_JOGADA:
 			goto_xy	POSx, POSy
 			mov		CL, Car
 			cmp		CL, 32		; S� escreve se for espa�o em branco
 			JNE     CICLO
-			mov		ah, 02h		; coloca o caracter lido no ecra
+			mov		ah, 02h					; coloca o caracter lido no ecra
 			mov		dl, [JogadorAtual]
 			int		21H	
 			jmp 	PROCURA_VITORIA_TAB
 
 PROCURA_VITORIA_TAB:
 			; xor     si, si
-			; mov     al, jogoAtual
-			; cmp     al, 1
-			; je      PROCURA_VITORIA_TAB_1_INICIO
-			; cmp     al, 2
-			; je      PROCURA_VITORIA_TAB_2_INICIO
-			; cmp     al, 3
-			; je      PROCURA_VITORIA_TAB_3_INICIO
-			; cmp     al, 4
-			; je      PROCURA_VITORIA_TAB_4_INICIO
-			; cmp     al, 5
-			; je      PROCURA_VITORIA_TAB_5_INICIO
-			; cmp     al, 6
-			; je      PROCURA_VITORIA_TAB_6_INICIO
-			; cmp     al, 7
-			; je      PROCURA_VITORIA_TAB_7_INICIO
-			; cmp     al, 8
-			; je      PROCURA_VITORIA_TAB_8_INICIO
-			; cmp     al, 9
-			; je      PROCURA_VITORIA_TAB_9_INICIO
-			jmp     fim
+			mov     al, jogoAtual
+			cmp     al, 1
+			je      PROCURA_VITORIA_TAB_1_INICIO
+			cmp     al, 2
+			je      PROCURA_VITORIA_TAB_2_INICIO
+			cmp     al, 3
+			je      PROCURA_VITORIA_TAB_3_INICIO
+			cmp     al, 4
+			je      PROCURA_VITORIA_TAB_4_INICIO
+			cmp     al, 5
+			je      PROCURA_VITORIA_TAB_5_INICIO
+			cmp     al, 6
+			je      PROCURA_VITORIA_TAB_6_INICIO
+			cmp     al, 7
+			je      PROCURA_VITORIA_TAB_7_INICIO
+			cmp     al, 8
+			je      PROCURA_VITORIA_TAB_8_INICIO
+			cmp     al, 9
+			je      PROCURA_VITORIA_TAB_9_INICIO
+			; jmp     fim
+			jmp     CICLO
 
 MUDA_PARA_TAB_1:
 			mov     POSy, 3
@@ -581,8 +604,6 @@ MUDA_JOGADOR_PARA_X:
 			je      MUDA_PARA_TAB_8
 			cmp     cl, 9
 			je      MUDA_PARA_TAB_9
-
-			jmp     fim
 MUDA_JOGADOR_PARA_O:
 			mov 	byte ptr [JogadorAtual], 'O'
 			dec     num_jogadas
@@ -607,8 +628,7 @@ MUDA_JOGADOR_PARA_O:
 			cmp     cl, 9
 			je      MUDA_PARA_TAB_9
 
-			jmp 	fim
-
+;############################################ TODA A LOGICA DO TABULEIRO 1 #############################
 PROCURA_VITORIA_TAB_1_INICIO:
 			mov     al, POSx
 			mov     ah, POSy
@@ -631,6 +651,9 @@ PROCURA_VITORIA_TAB_1_COLUNA_1:
 
 
 PROCURA_VITORIA_TAB_1_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
 			; VER SE O JOGADOR é X ou O
 			mov 	al, JogadorAtual
 			cmp     al, 'X'
@@ -643,26 +666,61 @@ PROCURA_VITORIA_TAB_1_POS_1:
 ATUALIZA_ARRAY_TAB_1_ESPACO_1_X:
 			mov  al, 1              ; Move the value 1 into the AL register
 			mov  [tabuleiro1_X], al ; Move the value from AL into the memory location tabuleiro1_X
-			jmp  PROCURA_VITORIA_TAB_1_FIM
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
 
 
 ATUALIZA_ARRAY_TAB_1_ESPACO_1_O:
 			mov  al, 1              ; Move the value 1 into the AL register
 			mov  [tabuleiro1_O], al ; Move the value from AL into the memory location tabuleiro1_X
-			jmp     PROCURA_VITORIA_TAB_1_FIM
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
 
 PROCURA_VITORIA_TAB_1_POS_4:
-; 			; VER SE O JOGADOR é X ou O
-; 			mov 	al, JogadorAtual
-; 			cmp     al, 'X'
-; 			je      ATUALIZA_ARRAY_TAB_1_ESPACO_4_X
-; 			cmp     al, 'O'
-; 			je      ATUALIZA_ARRAY_TAB_1_ESPACO_4_O
-; 			; MUDAR a combinaçao atual do array
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
 
 PROCURA_VITORIA_TAB_1_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
 
+ATUALIZA_ARRAY_TAB_1_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
 
+ATUALIZA_ARRAY_TAB_1_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
 
 PROCURA_VITORIA_TAB_1_COLUNA_2:
 			cmp     ah, 2
@@ -674,13 +732,79 @@ PROCURA_VITORIA_TAB_1_COLUNA_2:
 			jmp     CICLO
 
 PROCURA_VITORIA_TAB_1_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_2_O
 			; MUDAR a combinaçao atual do array
 
-PROCURA_VITORIA_TAB_1_POS_5:
+ATUALIZA_ARRAY_TAB_1_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
 
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
+
+PROCURA_VITORIA_TAB_1_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
 
 PROCURA_VITORIA_TAB_1_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
 
 PROCURA_VITORIA_TAB_1_COLUNA_3:
 			cmp     ah, 2
@@ -692,105 +816,3807 @@ PROCURA_VITORIA_TAB_1_COLUNA_3:
 			jmp     CICLO
 
 PROCURA_VITORIA_TAB_1_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_3_O
 			; MUDAR a combinaçao atual do array
 
+ATUALIZA_ARRAY_TAB_1_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
+
 PROCURA_VITORIA_TAB_1_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro1_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
 
 
 PROCURA_VITORIA_TAB_1_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_X
 
 
-PROCURA_VITORIA_TAB_1_FIM:
-			; Procurar vitoria no Tabuleiro 1
-			; Push the address of combinacao1 onto the stack
-			lea  si, combinacao1
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays
+ATUALIZA_ARRAY_TAB_1_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM_O
 
-			; Push the address of combinacao2 onto the stack
-			lea  si, combinacao2
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays
-
-			; Push the address of combinacao3 onto the stack
-			lea  si, combinacao3
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays
-
-			; Push the address of combinacao4 onto the stack
-			lea  si, combinacao4
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays
-
-			; Push the address of combinacao5 onto the stack
-			lea  si, combinacao5
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays
-
-			; Push the address of combinacao6 onto the stack
-			lea  si, combinacao6
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays
-
-			; Push the address of combinacao7 onto the stack
-			lea  si, combinacao7
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays
-
-			; Push the address of combinacao8 onto the stack
-			lea  si, combinacao8
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays
-
-			jmp  	MUDA_JOGADOR
-
-			compare_arrays:
-					; Retrieve the combination array from the stack
-					pop si
-
-					; Calculate the size of the arrays
-					mov cl, 9  ; Number of elements in the arrays
-
-					; Point to the start of the arrays
-					lea bp, tabuleiro1_X
-
-					; Loop to compare elements
-				compare_loop:
-						; Compare the current elements
-						mov al, [si]
-						mov bl, [bp]
-						cmp al, bl
-						; cmp byte [si], [bp]
-						jne endComparacao
-
-						; Move to the next element
-						inc si
-						inc bp
-
-						; Decrement the loop counter
-						loop compare_loop
-
-					mov  al, 1              ; Move the value 1 into the AL register
-					mov  [Vitorias], al ; Move the value from AL into the memory location tabuleiro1_X
-					; jmp     PROCURA_VITORIA_TOTAL
-					ret
-
-			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			endComparacao:
-					ret
-
-			jmp     fim
+PROCURA_VITORIA_TAB1_FIM_X:
 
 
+PROCURA_VITORIA_TAB_1_FIM_X:
+		jmp     MUDA_JOGADOR
+; 		; Procurar vitoria no Tabuleiro 1
+; 		; Push the address of combinacao1 onto the stack
+; 		lea  si, combinacao1
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_X
+
+; 		; Push the address of combinacao2 onto the stack
+; 		lea  si, combinacao2
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_X
+
+; 		; Push the address of combinacao3 onto the stack
+; 		lea  si, combinacao3
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_X
+
+; 		; Push the address of combinacao4 onto the stack
+; 		lea  si, combinacao4
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_X
+
+; 		; Push the address of combinacao5 onto the stack
+; 		lea  si, combinacao5
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_X
+
+; 		; Push the address of combinacao6 onto the stack
+; 		lea  si, combinacao6
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_X
+
+; 		; Push the address of combinacao7 onto the stack
+; 		lea  si, combinacao7
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_X
+
+; 		; Push the address of combinacao8 onto the stack
+; 		lea  si, combinacao8
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_X
+
+; 		jmp  	MUDA_JOGADOR
+
+; compare_arrays_1_X:
+; 		; Retrieve the combination array from the stack
+; 		pop si
+
+; 		; Calculate the size of the arrays
+; 		mov cx, 9  ; Number of elements in the arrays
+
+; 		; Point to the start of the arrays
+; 		lea bp, tabuleiro1_X
+
+; 		; Loop to compare elements
+; compare_loop_1_X:
+; 		; Compare the current elements
+; 		mov al, [si]
+; 		mov bl, [bp]
+; 		cmp al, bl
+; 		; cmp byte [si], [bp]
+; 		jne endComparacao_1_X
+
+; 		; Move to the next element
+; 		inc si
+; 		inc bp
+
+; 		; Decrement the loop counter
+; 		loop compare_loop_1_X
+
+; 		mov  al, 1              ; Move the value 1 into the AL register
+; 		mov  [Vitorias_X], al ; Move the value from AL into the memory location tabuleiro1_X
+; 		; jmp     PROCURA_VITORIA_TOTAL~
+; 		jmp  	MUDA_JOGADOR
+; 		ret
+
+; 		;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+; endComparacao_1_X:
+; 		ret
+
+PROCURA_VITORIA_TAB_1_FIM_O:
+		jmp     MUDA_JOGADOR
+; 		; Procurar vitoria no Tabuleiro 1
+; 		; Push the address of combinacao1 onto the stack
+; 		lea  si, combinacao1
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_O
+
+; 		; Push the address of combinacao2 onto the stack
+; 		lea  si, combinacao2
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_O
+
+; 		; Push the address of combinacao3 onto the stack
+; 		lea  si, combinacao3
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_O
+
+; 		; Push the address of combinacao4 onto the stack
+; 		lea  si, combinacao4
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_O
+
+; 		; Push the address of combinacao5 onto the stack
+; 		lea  si, combinacao5
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_O
+
+; 		; Push the address of combinacao6 onto the stack
+; 		lea  si, combinacao6
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_O
+
+; 		; Push the address of combinacao7 onto the stack
+; 		lea  si, combinacao7
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_O
+
+; 		; Push the address of combinacao8 onto the stack
+; 		lea  si, combinacao8
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_1_O
+
+; 		jmp   MUDA_JOGADOR
+
+; compare_arrays_1_O:
+; 		; Retrieve the combination array from the stack
+; 		pop si
+
+; 		; Calculate the size of the arrays
+; 		mov cx, 9  ; Number of elements in the arrays
+
+; 		; Point to the start of the arrays
+; 		lea bp, tabuleiro1_O
+
+; 		; Loop to compare elements
+; compare_loop_1_O:
+;     	; Compare the current elements
+; 		mov al, [si]
+; 		mov bl, [bp]
+; 		cmp al, bl
+; 		jne endComparacao_1_O
+
+; 		; Move to the next element
+; 		inc si
+; 		inc bp
+
+; 		; Decrement the loop counter
+; 		loop compare_loop_1_O
+
+; 		mov  al, 1              ; Move the value 1 into the AL register
+; 		mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+; 		jmp   MUDA_JOGADOR
+; 		ret
+
+; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DETECTADA UMA VITORIA NO TABULEIRO
+; endComparacao_1_O:
+;     	ret
+
+
+;############################################### TODA A LOGICA DO TABULEIRO 2 ###############################
+
+PROCURA_VITORIA_TAB_2_INICIO:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 13
+			je      PROCURA_VITORIA_TAB_2_COLUNA_1
+			cmp     al, 15
+			je      PROCURA_VITORIA_TAB_2_COLUNA_2
+			cmp     al, 17
+			je      PROCURA_VITORIA_TAB_2_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_2_COLUNA_1:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_2_POS_1
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_2_POS_4
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_2_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_2_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_1_O
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro2_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro2_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+PROCURA_VITORIA_TAB_2_POS_4:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro2_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro2_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+PROCURA_VITORIA_TAB_2_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro2_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro2_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+PROCURA_VITORIA_TAB_2_COLUNA_2:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_2_POS_2
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_2_POS_5
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_2_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_2_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_2_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro2_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro2_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+PROCURA_VITORIA_TAB_2_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro2_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro2_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+PROCURA_VITORIA_TAB_2_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro2_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro2_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+PROCURA_VITORIA_TAB_2_COLUNA_3:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_2_POS_3
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_2_POS_6
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_2_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_2_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_3_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro2_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro2_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+PROCURA_VITORIA_TAB_2_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro2_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro2_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+
+PROCURA_VITORIA_TAB_2_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_2_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro2_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_2_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro2_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_2_FIM_O
+
+PROCURA_VITORIA_TAB_2_FIM_X:
+		jmp     MUDA_JOGADOR
+; 		; Procurar vitoria no Tabuleiro 2
+; 		; Push the address of combinacao1 onto the stack
+; 		lea  si, combinacao1
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_2_X
+
+; 		; Push the address of combinacao2 onto the stack
+; 		lea  si, combinacao2
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_2_X
+
+; 		; Push the address of combinacao3 onto the stack
+; 		lea  si, combinacao3
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_2_X
+
+; 		; Push the address of combinacao4 onto the stack
+; 		lea  si, combinacao4
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_2_X
+
+; 		; Push the address of combinacao5 onto the stack
+; 		lea  si, combinacao5
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_2_X
+
+; 		; Push the address of combinacao6 onto the stack
+; 		lea  si, combinacao6
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_2_X
+
+; 		; Push the address of combinacao7 onto the stack
+; 		lea  si, combinacao7
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_2_X
+
+; 		; Push the address of combinacao8 onto the stack
+; 		lea  si, combinacao8
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_2_X
+
+; 		jmp  	MUDA_JOGADOR
+
+; compare_arrays_2_X:
+; 		; Retrieve the combination array from the stack
+; 		pop si
+
+; 		; Calculate the size of the arrays
+; 		mov cx, 9  ; Number of elements in the arrays
+
+; 		; Point to the start of the arrays
+; 		lea bp, tabuleiro2_X
+
+; 		; Loop to compare elements
+; compare_loop_2_X:
+; 		; Compare the current elements
+; 		mov al, [si]
+; 		mov bl, [bp]
+; 		cmp al, bl
+; 		; cmp byte [si], [bp]
+; 		jne endComparacao_2_X
+
+; 		; Move to the next element
+; 		inc si
+; 		inc bp
+
+; 		; Decrement the loop counter
+; 		loop compare_loop_2_X
+
+; 		mov  al, 1              ; Move the value 1 into the AL register
+; 		mov  si, 1
+; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro2_X
+; 		; jmp     PROCURA_VITORIA_TOTAL~
+; 		jmp  	MUDA_JOGADOR
+; 		ret
+
+; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+; endComparacao_2_X:
+; 		ret
+
+PROCURA_VITORIA_TAB_2_FIM_O:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 2
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_2_O
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_2_O
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_2_O
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_2_O
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_2_O
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_2_O
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_2_O
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_2_O
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_2_O:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro2_O
+
+			; 		; Loop to compare elements
+			; 	compare_loop_2_O:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_2_O
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_2_O
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 1
+			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro2_O
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_2_O:
+			; 		ret
+
+;############################################### TODA A LOGICA DO TABULEIRO 3 ###############################
+
+PROCURA_VITORIA_TAB_3_INICIO:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 22
+			je      PROCURA_VITORIA_TAB_3_COLUNA_1
+			cmp     al, 24
+			je      PROCURA_VITORIA_TAB_3_COLUNA_2
+			cmp     al, 26
+			je      PROCURA_VITORIA_TAB_3_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_3_COLUNA_1:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_3_POS_1
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_3_POS_4
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_3_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_3_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_1_O
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro3_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro3_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+PROCURA_VITORIA_TAB_3_POS_4:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro3_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro3_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+PROCURA_VITORIA_TAB_3_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro1_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro3_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+PROCURA_VITORIA_TAB_3_COLUNA_2:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_3_POS_2
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_3_POS_5
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_3_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_3_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_2_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro3_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro3_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+PROCURA_VITORIA_TAB_3_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro3_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro3_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+PROCURA_VITORIA_TAB_3_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro3_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro3_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+PROCURA_VITORIA_TAB_3_COLUNA_3:
+			cmp     ah, 2
+			je      PROCURA_VITORIA_TAB_3_POS_3
+			cmp     ah, 3
+			je      PROCURA_VITORIA_TAB_3_POS_6
+			cmp     ah, 4
+			je      PROCURA_VITORIA_TAB_3_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_3_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_3_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro3_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro3_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+PROCURA_VITORIA_TAB_3_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro3_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro3_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+
+PROCURA_VITORIA_TAB_3_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_3_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro3_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_3_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro3_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_3_FIM_O
+
+PROCURA_VITORIA_TAB_3_FIM_X:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 3
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_X
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_X
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_X
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_X
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_X
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_X
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_X
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_X
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_3_X:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro3_X
+
+			; 		; Loop to compare elements
+			; 	compare_loop_3_X:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_3_X
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_3_X
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 2
+			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro3_X
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_3_X:
+			; 		ret
+
+PROCURA_VITORIA_TAB_3_FIM_O:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 3
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_O
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_O
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_O
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_O
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_O
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_O
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_O
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_3_O
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_3_O:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro3_O
+
+			; 		; Loop to compare elements
+			; 	compare_loop_3_O:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_3_O
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_3_O
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 2
+			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro3_O
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_3_O:
+			; 		ret
+
+;############################################ TODA A LOGICA DO TABULEIRO 4 #############################
+PROCURA_VITORIA_TAB_4_INICIO:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 4
+			je      PROCURA_VITORIA_TAB_4_COLUNA_1
+			cmp     al, 6
+			je      PROCURA_VITORIA_TAB_4_COLUNA_2
+			cmp     al, 8
+			je      PROCURA_VITORIA_TAB_4_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_4_COLUNA_1:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_4_POS_1
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_4_POS_4
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_4_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_4_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_1_O
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro4_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro4_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+PROCURA_VITORIA_TAB_4_POS_4:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro4_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro4_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+PROCURA_VITORIA_TAB_4_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro4_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro4_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+PROCURA_VITORIA_TAB_4_COLUNA_2:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_4_POS_2
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_4_POS_5
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_4_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_4_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_2_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro4_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro4_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+PROCURA_VITORIA_TAB_4_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro4_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro4_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+PROCURA_VITORIA_TAB_4_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro4_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro4_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+PROCURA_VITORIA_TAB_4_COLUNA_3:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_4_POS_3
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_4_POS_6
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_4_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_4_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_3_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro4_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro4_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+PROCURA_VITORIA_TAB_4_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro4_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro4_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+
+PROCURA_VITORIA_TAB_4_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_4_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro4_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_4_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro4_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_4_FIM_O
+
+PROCURA_VITORIA_TAB_4_FIM_X:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 1
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_X
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_X
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_X
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_X
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_X
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_X
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_X
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_X
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_4_X:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro4_X
+
+			; 		; Loop to compare elements
+			; 	compare_loop_4_X:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_4_X
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_4_X
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 3
+			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro4_X
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_4_X:
+			; 		ret
+
+PROCURA_VITORIA_TAB_4_FIM_O:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 1
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_O
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_O
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_O
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_O
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_O
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_O
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_O
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_4_O
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_4_O:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro4_O
+
+			; 		; Loop to compare elements
+			; 	compare_loop_4_O:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_4_O
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_4_O
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 3
+			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro4_O
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_4_O:
+			; 		ret
+
+;############################################ TODA A LOGICA DO TABULEIRO 5 #############################
+PROCURA_VITORIA_TAB_5_INICIO:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 13
+			je      PROCURA_VITORIA_TAB_5_COLUNA_1
+			cmp     al, 15
+			je      PROCURA_VITORIA_TAB_5_COLUNA_2
+			cmp     al, 17
+			je      PROCURA_VITORIA_TAB_5_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_5_COLUNA_1:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_5_POS_1
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_5_POS_4
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_5_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_5_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_1_O
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro5_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro5_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+PROCURA_VITORIA_TAB_5_POS_4:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro5_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro5_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+PROCURA_VITORIA_TAB_5_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro5_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro5_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+PROCURA_VITORIA_TAB_5_COLUNA_2:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_5_POS_2
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_5_POS_5
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_5_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_5_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_2_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro5_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro5_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+PROCURA_VITORIA_TAB_5_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro5_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro5_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+PROCURA_VITORIA_TAB_5_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro5_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro5_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+PROCURA_VITORIA_TAB_5_COLUNA_3:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_5_POS_3
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_5_POS_6
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_5_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_5_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_3_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro5_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro5_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+PROCURA_VITORIA_TAB_5_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro5_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro5_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+
+PROCURA_VITORIA_TAB_5_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_5_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro5_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_5_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro5_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_5_FIM_O
+
+PROCURA_VITORIA_TAB_5_FIM_X:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 1
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_X
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_X
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_X
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_X
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_X
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_X
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_X
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_X
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_5_X:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro5_X
+
+			; 		; Loop to compare elements
+			; 	compare_loop_5_X:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_5_X
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_5_X
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 4
+			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro5_X
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_5_X:
+			; 		ret
+
+PROCURA_VITORIA_TAB_5_FIM_O:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 1
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_O
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_O
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_O
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_O
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_O
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_O
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_O
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_5_O
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_5_O:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro5_O
+
+			; 		; Loop to compare elements
+			; 	compare_loop_5_O:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_5_O
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_5_O
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 4
+			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro5_O
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_5_O:
+			; 		ret
+
+;############################################ TODA A LOGICA DO TABULEIRO 6 #############################
+PROCURA_VITORIA_TAB_6_INICIO:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 22
+			je      PROCURA_VITORIA_TAB_6_COLUNA_1
+			cmp     al, 24
+			je      PROCURA_VITORIA_TAB_6_COLUNA_2
+			cmp     al, 26
+			je      PROCURA_VITORIA_TAB_6_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_6_COLUNA_1:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_6_POS_1
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_6_POS_4
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_6_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_6_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_1_O
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro6_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro6_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+PROCURA_VITORIA_TAB_6_POS_4:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro6_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro6_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+PROCURA_VITORIA_TAB_6_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro6_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro6_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+PROCURA_VITORIA_TAB_6_COLUNA_2:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_6_POS_2
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_6_POS_5
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_6_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_6_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_2_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro6_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro6_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+PROCURA_VITORIA_TAB_6_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro6_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro6_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+PROCURA_VITORIA_TAB_6_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro6_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro6_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+PROCURA_VITORIA_TAB_6_COLUNA_3:
+			cmp     ah, 6
+			je      PROCURA_VITORIA_TAB_6_POS_3
+			cmp     ah, 7
+			je      PROCURA_VITORIA_TAB_6_POS_6
+			cmp     ah, 8
+			je      PROCURA_VITORIA_TAB_6_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_6_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_3_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro6_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro6_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+PROCURA_VITORIA_TAB_6_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro6_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro6_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+
+PROCURA_VITORIA_TAB_6_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_6_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro6_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_6_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro6_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_6_FIM_O
+
+PROCURA_VITORIA_TAB_6_FIM_X:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 1
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_X
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_X
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_X
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_X
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_X
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_X
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_X
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_X
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_6_X:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro4_X
+
+			; 		; Loop to compare elements
+			; 	compare_loop_6_X:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_6_X
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_6_X
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 5
+			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro6_X
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_6_X:
+			; 		ret
+
+PROCURA_VITORIA_TAB_6_FIM_O:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 1
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_O
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_O
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_O
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_O
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_O
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_O
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_O
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_6_O
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_6_O:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro4_O
+
+			; 		; Loop to compare elements
+			; 	compare_loop_6_O:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_6_O
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_6_O
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 5
+			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro6_O
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_6_O:
+			; 		ret
+
+;############################################ TODA A LOGICA DO TABULEIRO 7 #############################
+PROCURA_VITORIA_TAB_7_INICIO:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 4
+			je      PROCURA_VITORIA_TAB_7_COLUNA_1
+			cmp     al, 6
+			je      PROCURA_VITORIA_TAB_7_COLUNA_2
+			cmp     al, 8
+			je      PROCURA_VITORIA_TAB_7_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_7_COLUNA_1:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_7_POS_1
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_7_POS_4
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_7_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_7_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_1_O
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro7_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro7_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+PROCURA_VITORIA_TAB_7_POS_4:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro7_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro7_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+PROCURA_VITORIA_TAB_7_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro7_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro7_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+PROCURA_VITORIA_TAB_7_COLUNA_2:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_7_POS_2
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_7_POS_5
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_7_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_7_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_2_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro7_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro7_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+PROCURA_VITORIA_TAB_7_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro7_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro7_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+PROCURA_VITORIA_TAB_7_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro7_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro7_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+PROCURA_VITORIA_TAB_7_COLUNA_3:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_7_POS_3
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_7_POS_6
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_7_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_7_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_3_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro7_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro7_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+PROCURA_VITORIA_TAB_7_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro7_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro7_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+
+PROCURA_VITORIA_TAB_7_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_7_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro7_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_7_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro7_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_7_FIM_O
+
+PROCURA_VITORIA_TAB_7_FIM_X:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 1
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_X
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_X
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_X
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_X
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_X
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_X
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_X
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_X
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_7_X:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro7_X
+
+			; 		; Loop to compare elements
+			; 	compare_loop_7_X:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_7_X
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_7_X
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 6
+			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro7_X
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_7_X:
+			; 		ret
+
+PROCURA_VITORIA_TAB_7_FIM_O:
+		jmp     MUDA_JOGADOR
+			; ; Procurar vitoria no Tabuleiro 1
+			; ; Push the address of combinacao1 onto the stack
+			; lea  si, combinacao1
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_O
+
+			; ; Push the address of combinacao2 onto the stack
+			; lea  si, combinacao2
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_O
+
+			; ; Push the address of combinacao3 onto the stack
+			; lea  si, combinacao3
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_O
+
+			; ; Push the address of combinacao4 onto the stack
+			; lea  si, combinacao4
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_O
+
+			; ; Push the address of combinacao5 onto the stack
+			; lea  si, combinacao5
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_O
+
+			; ; Push the address of combinacao6 onto the stack
+			; lea  si, combinacao6
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_O
+
+			; ; Push the address of combinacao7 onto the stack
+			; lea  si, combinacao7
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_O
+
+			; ; Push the address of combinacao8 onto the stack
+			; lea  si, combinacao8
+			; push si
+			; ; Call the compare_arrays subroutine
+			; call compare_arrays_7_O
+
+			; jmp  	MUDA_JOGADOR
+
+			; compare_arrays_7_O:
+			; 		; Retrieve the combination array from the stack
+			; 		pop si
+
+			; 		; Calculate the size of the arrays
+			; 		mov cx, 9  ; Number of elements in the arrays
+
+			; 		; Point to the start of the arrays
+			; 		lea bp, tabuleiro7_O
+
+			; 		; Loop to compare elements
+			; 	compare_loop_7_O:
+			; 			; Compare the current elements
+			; 			mov al, [si]
+			; 			mov bl, [bp]
+			; 			cmp al, bl
+			; 			; cmp byte [si], [bp]
+			; 			jne endComparacao_7_O
+
+			; 			; Move to the next element
+			; 			inc si
+			; 			inc bp
+
+			; 			; Decrement the loop counter
+			; 			loop compare_loop_7_O
+
+			; 		mov  al, 1              ; Move the value 1 into the AL register
+			; 		mov  si, 6
+			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro7_O
+			; 		; jmp     PROCURA_VITORIA_TOTAL
+			; 		jmp  	MUDA_JOGADOR
+			; 		ret
+
+			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			; endComparacao_7_O:
+			; 		ret
+
+;############################################ TODA A LOGICA DO TABULEIRO 8 #############################
+PROCURA_VITORIA_TAB_8_INICIO:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 13
+			je      PROCURA_VITORIA_TAB_8_COLUNA_1
+			cmp     al, 15
+			je      PROCURA_VITORIA_TAB_8_COLUNA_2
+			cmp     al, 17
+			je      PROCURA_VITORIA_TAB_8_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_8_COLUNA_1:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_8_POS_1
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_8_POS_4
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_8_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_8_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_1_O
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro8_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro8_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+PROCURA_VITORIA_TAB_8_POS_4:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro8_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro8_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+PROCURA_VITORIA_TAB_8_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro8_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro8_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+PROCURA_VITORIA_TAB_8_COLUNA_2:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_8_POS_2
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_8_POS_5
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_8_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_8_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_2_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro8_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro8_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+PROCURA_VITORIA_TAB_8_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro8_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro8_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+PROCURA_VITORIA_TAB_8_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro8_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro8_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+PROCURA_VITORIA_TAB_8_COLUNA_3:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_8_POS_3
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_8_POS_6
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_8_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_8_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_3_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro8_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro8_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+PROCURA_VITORIA_TAB_8_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro8_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro8_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+
+PROCURA_VITORIA_TAB_8_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_8_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro8_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_8_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro8_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_8_FIM_O
+
+PROCURA_VITORIA_TAB_8_FIM_X:
+		jmp     MUDA_JOGADOR
+; 		; Procurar vitoria no Tabuleiro 1
+; 		; Push the address of combinacao1 onto the stack
+; 		lea  si, combinacao1
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_X
+
+; 		; Push the address of combinacao2 onto the stack
+; 		lea  si, combinacao2
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_X
+
+; 		; Push the address of combinacao3 onto the stack
+; 		lea  si, combinacao3
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_X
+
+; 		; Push the address of combinacao4 onto the stack
+; 		lea  si, combinacao4
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_X
+
+; 		; Push the address of combinacao5 onto the stack
+; 		lea  si, combinacao5
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_X
+
+; 		; Push the address of combinacao6 onto the stack
+; 		lea  si, combinacao6
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_X
+
+; 		; Push the address of combinacao7 onto the stack
+; 		lea  si, combinacao7
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_X
+
+; 		; Push the address of combinacao8 onto the stack
+; 		lea  si, combinacao8
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_X
+
+; 		jmp  	MUDA_JOGADOR
+
+; compare_arrays_8_X:
+; 		; Retrieve the combination array from the stack
+; 		pop si
+
+; 		; Calculate the size of the arrays
+; 		mov cx, 9  ; Number of elements in the arrays
+
+; 		; Point to the start of the arrays
+; 		lea bp, tabuleiro8_X
+
+; 		; Loop to compare elements
+; compare_loop_8_X:
+; 		; Compare the current elements
+; 		mov al, [si]
+; 		mov bl, [bp]
+; 		cmp al, bl
+; 		; cmp byte [si], [bp]
+; 		jne endComparacao_8_X
+
+; 		; Move to the next element
+; 		inc si
+; 		inc bp
+
+; 		; Decrement the loop counter
+; 		loop compare_loop_8_X
+
+; 		mov  al, 1              ; Move the value 1 into the AL register
+; 		mov  si, 7
+; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro8_X
+; 		; jmp     PROCURA_VITORIA_TOTAL
+; 		jmp  	MUDA_JOGADOR
+; 		ret
+
+; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+; endComparacao_8_X:
+; 		ret
+
+PROCURA_VITORIA_TAB_8_FIM_O:
+		jmp     MUDA_JOGADOR
+; 		; Procurar vitoria no Tabuleiro 1
+; 		; Push the address of combinacao1 onto the stack
+; 		lea  si, combinacao1
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_O
+
+; 		; Push the address of combinacao2 onto the stack
+; 		lea  si, combinacao2
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_O
+
+; 		; Push the address of combinacao3 onto the stack
+; 		lea  si, combinacao3
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_O
+
+; 		; Push the address of combinacao4 onto the stack
+; 		lea  si, combinacao4
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_O
+
+; 		; Push the address of combinacao5 onto the stack
+; 		lea  si, combinacao5
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_O
+
+; 		; Push the address of combinacao6 onto the stack
+; 		lea  si, combinacao6
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_O
+
+; 		; Push the address of combinacao7 onto the stack
+; 		lea  si, combinacao7
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_O
+
+; 		; Push the address of combinacao8 onto the stack
+; 		lea  si, combinacao8
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_8_O
+
+; 		jmp  	MUDA_JOGADOR
+
+; compare_arrays_8_O:
+; 		; Retrieve the combination array from the stack
+; 		pop si
+
+; 		; Calculate the size of the arrays
+; 		mov cx, 9  ; Number of elements in the arrays
+
+; 		; Point to the start of the arrays
+; 		lea bp, tabuleiro8_O
+
+; 		; Loop to compare elements
+; compare_loop_8_O:
+; 		; Compare the current elements
+; 		mov al, [si]
+; 		mov bl, [bp]
+; 		cmp al, bl
+; 		; cmp byte [si], [bp]
+; 		jne endComparacao_8_O
+
+; 		; Move to the next element
+; 		inc si
+; 		inc bp
+
+; 		; Decrement the loop counter
+; 		loop compare_loop_8_O
+
+; 		mov  al, 1              ; Move the value 1 into the AL register
+; 		mov  si, 7
+; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro8_O
+; 		; jmp     PROCURA_VITORIA_TOTAL
+; 		jmp  	MUDA_JOGADOR
+; 		ret
+
+; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+; endComparacao_8_O:
+; 		ret
+
+;############################################ TODA A LOGICA DO TABULEIRO 9 #############################
+PROCURA_VITORIA_TAB_9_INICIO:
+			mov     al, POSx
+			mov     ah, POSy
+			cmp     al, 22
+			je      PROCURA_VITORIA_TAB_9_COLUNA_1
+			cmp     al, 24
+			je      PROCURA_VITORIA_TAB_9_COLUNA_2
+			cmp     al, 26
+			je      PROCURA_VITORIA_TAB_9_COLUNA_3
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_9_COLUNA_1:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_9_POS_1
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_9_POS_4
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_9_POS_7
+			jmp     CICLO
+
+
+PROCURA_VITORIA_TAB_9_POS_1:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 1
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_1_O
+			; MUDAR a combinaçao atual do array
+
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro9_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro9_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+PROCURA_VITORIA_TAB_9_POS_4:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 4
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_4_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_4_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_4_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro9_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_4_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [tabuleiro9_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+PROCURA_VITORIA_TAB_9_POS_7:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 7
+			mov     proximoTab, cl
+ 			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_7_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_7_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_7_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro9_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_7_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [tabuleiro9_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+PROCURA_VITORIA_TAB_9_COLUNA_2:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_9_POS_2
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_9_POS_5
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_9_POS_8
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_9_POS_2:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 2
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_2_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_2_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_2_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro9_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_2_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [tabuleiro9_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+PROCURA_VITORIA_TAB_9_POS_5:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 5
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_5_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_5_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_5_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro9_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_5_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [tabuleiro9_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+PROCURA_VITORIA_TAB_9_POS_8:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 8
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_8_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_8_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_8_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro9_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_8_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [tabuleiro9_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+PROCURA_VITORIA_TAB_9_COLUNA_3:
+			cmp     ah, 10
+			je      PROCURA_VITORIA_TAB_9_POS_3
+			cmp     ah, 11
+			je      PROCURA_VITORIA_TAB_9_POS_6
+			cmp     ah, 12
+			je      PROCURA_VITORIA_TAB_9_POS_9
+			jmp     CICLO
+
+PROCURA_VITORIA_TAB_9_POS_3:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 3
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_3_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_3_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_3_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro9_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_3_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [tabuleiro9_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+PROCURA_VITORIA_TAB_9_POS_6:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 6
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_6_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_6_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_6_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro9_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_6_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [tabuleiro9_O+si], al 	; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+
+PROCURA_VITORIA_TAB_9_POS_9:
+			; Muda o proximo jogo para a posicao onde foi jogado este ( BONUS 1 )
+			mov     cl, 9
+			mov     proximoTab, cl
+			; VER SE O JOGADOR é X ou O
+			mov 	al, JogadorAtual
+			cmp     al, 'X'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_9_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_9_ESPACO_9_O
+			; MUDAR a combinaçao atual do array
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_9_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro9_X+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_X
+
+
+ATUALIZA_ARRAY_TAB_9_ESPACO_9_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [tabuleiro9_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_9_FIM_O
+
+PROCURA_VITORIA_TAB_9_FIM_X:
+		jmp     MUDA_JOGADOR
+; 		; Procurar vitoria no Tabuleiro 1
+; 		; Push the address of combinacao1 onto the stack
+; 		lea  si, combinacao1
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_X
+
+; 		; Push the address of combinacao2 onto the stack
+; 		lea  si, combinacao2
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_X
+
+; 		; Push the address of combinacao3 onto the stack
+; 		lea  si, combinacao3
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_X
+
+; 		; Push the address of combinacao4 onto the stack
+; 		lea  si, combinacao4
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_X
+
+; 		; Push the address of combinacao5 onto the stack
+; 		lea  si, combinacao5
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_X
+
+; 		; Push the address of combinacao6 onto the stack
+; 		lea  si, combinacao6
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_X
+
+; 		; Push the address of combinacao7 onto the stack
+; 		lea  si, combinacao7
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_X
+
+; 		; Push the address of combinacao8 onto the stack
+; 		lea  si, combinacao8
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_X
+
+; 		jmp  	MUDA_JOGADOR
+
+; compare_arrays_9_X:
+; 		; Retrieve the combination array from the stack
+; 		pop si
+
+; 		; Calculate the size of the arrays
+; 		mov cx, 9  ; Number of elements in the arrays
+
+; 		; Point to the start of the arrays
+; 		lea bp, tabuleiro9_X
+
+; 		; Loop to compare elements
+; compare_loop_9_X:
+; 		; Compare the current elements
+; 		mov al, [si]
+; 		mov bl, [bp]
+; 		cmp al, bl
+; 		; cmp byte [si], [bp]
+; 		jne endComparacao_9_X
+
+; 		; Move to the next element
+; 		inc si
+; 		inc bp
+
+; 		; Decrement the loop counter
+; 		loop compare_loop_9_X
+
+; 		mov  al, 1              ; Move the value 1 into the AL register
+; 		mov  si, 8
+; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro9_X
+; 		; jmp     PROCURA_VITORIA_TOTAL
+; 		jmp  	MUDA_JOGADOR
+; 		ret
+
+; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+; endComparacao_9_X:
+; 		ret
+
+PROCURA_VITORIA_TAB_9_FIM_O:
+		jmp     MUDA_JOGADOR
+; 		; Procurar vitoria no Tabuleiro 1
+; 		; Push the address of combinacao1 onto the stack
+; 		lea  si, combinacao1
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_O
+
+; 		; Push the address of combinacao2 onto the stack
+; 		lea  si, combinacao2
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_O
+
+; 		; Push the address of combinacao3 onto the stack
+; 		lea  si, combinacao3
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_O
+
+; 		; Push the address of combinacao4 onto the stack
+; 		lea  si, combinacao4
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_O
+
+; 		; Push the address of combinacao5 onto the stack
+; 		lea  si, combinacao5
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_O
+
+; 		; Push the address of combinacao6 onto the stack
+; 		lea  si, combinacao6
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_O
+
+; 		; Push the address of combinacao7 onto the stack
+; 		lea  si, combinacao7
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_O
+
+; 		; Push the address of combinacao8 onto the stack
+; 		lea  si, combinacao8
+; 		push si
+; 		; Call the compare_arrays subroutine
+; 		call compare_arrays_9_O
+
+; 		jmp  	MUDA_JOGADOR
+
+; compare_arrays_9_O:
+; 		; Retrieve the combination array from the stack
+; 		pop si
+
+; 		; Calculate the size of the arrays
+; 		mov cx, 9  ; Number of elements in the arrays
+
+; 		; Point to the start of the arrays
+; 		lea bp, tabuleiro9_O
+
+; 		; Loop to compare elements
+; compare_loop_9_O:
+; 		; Compare the current elements
+; 		mov al, [si]
+; 		mov bl, [bp]
+; 		cmp al, bl
+; 		; cmp byte [si], [bp]
+; 		jne endComparacao_9_O
+
+; 		; Move to the next element
+; 		inc si
+; 		inc bp
+
+; 		; Decrement the loop counter
+; 		loop compare_loop_9_O
+
+; 		mov  al, 1              ; Move the value 1 into the AL register
+; 		mov  si, 8
+; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro9_O
+; 		; jmp     PROCURA_VITORIA_TOTAL
+; 		; jmp     MOSTRA_VITORIA_TAB
+; 		jmp  	MUDA_JOGADOR
+; 		ret
+
+; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+; endComparacao_9_O:
+; 			ret
 MUDA_JOGADOR:
 			mov     al, num_jogadas
 			cmp     al, 0
@@ -800,9 +4626,13 @@ MUDA_JOGADOR:
 			je      MUDA_JOGADOR_PARA_X
 			cmp 	al, 'X'
 			je      MUDA_JOGADOR_PARA_O
-			jmp     fim
+
+MOSTRA_VITORIA_TAB:
+
 
 PROCURA_VITORIA_TOTAL:
+
+			jmp     CICLO
 
 ESTEND_JOGO:		;Verificar se pode andar
 			cmp 	al,48h
@@ -965,10 +4795,6 @@ DIREITA_JOGO:
 			cmp     cl, 9                    
 			je      DIREITA_JOGO_COLUNA_3
 
-			inc		POSx		;Direita
-			inc		POSx
-			jmp		CICLO
-
 DIREITA_JOGO_COLUNA_1:
 			mov     cl, POSx
 			cmp     cl, 8
@@ -1043,7 +4869,6 @@ JOGADOR2:
 fim:
 	RET
 IMP_NOMES_JOGO endp
-
 ; ##################################################################
 ATRIBUI_SIMBOLO PROC
 					jmp		fim
@@ -1054,40 +4879,40 @@ fim:
 ATRIBUI_SIMBOLO endp
 
 ; ####################################################################
-CalcAleat proc near
+; CalcAleat proc near
 
-	sub	sp,2
-	push	bp
-	mov	bp,sp
-	push	ax
-	push	cx
-	push	dx	
-	mov	ax,[bp+4]
-	mov	[bp+2],ax
+; 	sub	sp,2
+; 	push	bp
+; 	mov	bp,sp
+; 	push	ax
+; 	push	cx
+; 	push	dx	
+; 	mov	ax,[bp+4]
+; 	mov	[bp+2],ax
 
-	mov	ah,00h
-	int	1ah
+; 	mov	ah,00h
+; 	int	1ah
 
-	add	dx,ultimo_num_aleat
-	add	cx,dx	
-	mov	ax,65521
-	push	dx
-	mul	cx
-	pop	dx
-	xchg	dl,dh
-	add	dx,32749
-	add	dx,ax
+; 	add	dx,ultimo_num_aleat
+; 	add	cx,dx	
+; 	mov	ax,65521
+; 	push	dx
+; 	mul	cx
+; 	pop	dx
+; 	xchg	dl,dh
+; 	add	dx,32749
+; 	add	dx,ax
 
-	mov	ultimo_num_aleat,dx
+; 	mov	ultimo_num_aleat,dx
 
-	mov	[BP+4],dx
+; 	mov	[BP+4],dx
 
-	pop	dx
-	pop	cx
-	pop	ax
-	pop	bp
-	ret
-CalcAleat endp
+; 	pop	dx
+; 	pop	cx
+; 	pop	ax
+; 	pop	bp
+; 	ret
+; CalcAleat endp
 ; ######################################################################
 
 ;########################################################################
