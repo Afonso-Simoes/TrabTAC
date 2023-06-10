@@ -76,6 +76,7 @@ dseg	segment para public 'data'
 		Vitorias        db      ?, ?, ?, ?, ?, ?, ?, ?, ?
 
 		jogoAtual       db      5                            ;Varia de 1 a 9 e é a referencia a cada tabuleiro
+		proximoTab      db      ?
 
 		Car				db	32	; Guarda um caracter do Ecran 
 		Cor				db	7	; Guarda os atributos de cor do caracter
@@ -511,15 +512,102 @@ PROCURA_VITORIA_TAB:
 			; je      PROCURA_VITORIA_TAB_9_INICIO
 			jmp     fim
 
+MUDA_PARA_TAB_1:
+			mov     POSy, 3
+			mov     POSx, 6
+			jmp     CICLO
+
+MUDA_PARA_TAB_2:
+			mov     POSy, 3
+			mov     POSx, 15
+			jmp     CICLO
+
+MUDA_PARA_TAB_3:
+			mov     POSy, 3
+			mov     POSx, 24
+			jmp     CICLO
+
+MUDA_PARA_TAB_4:
+			mov     POSy, 7
+			mov     POSx, 6
+			jmp     CICLO
+
+MUDA_PARA_TAB_5:
+			mov     POSy, 7
+			mov     POSx, 15
+			jmp     CICLO
+
+MUDA_PARA_TAB_6:
+			mov     POSy, 7
+			mov     POSx, 24
+			jmp     CICLO
+
+MUDA_PARA_TAB_7:
+			mov     POSy, 11
+			mov     POSx, 6
+			jmp     CICLO
+
+MUDA_PARA_TAB_8:
+			mov     POSy, 11
+			mov     POSx, 15
+			jmp     CICLO
+
+MUDA_PARA_TAB_9:
+			mov     POSy, 11
+			mov     POSx, 24
+			jmp     CICLO
+
+
 MUDA_JOGADOR_PARA_X:
 			mov 	byte ptr [JogadorAtual], 'X'
 			dec     num_jogadas
-			jmp 	CICLO
+			mov     cl, proximoTab
+			mov     jogoAtual, cl
+			cmp     cl, 1
+			je      MUDA_PARA_TAB_1
+			cmp     cl, 2
+			je      MUDA_PARA_TAB_2
+			cmp     cl, 3
+			je      MUDA_PARA_TAB_3
+			cmp     cl, 4
+			je      MUDA_PARA_TAB_4
+			cmp     cl, 5
+			je      MUDA_PARA_TAB_5
+			cmp     cl, 6
+			je      MUDA_PARA_TAB_6
+			cmp     cl, 7
+			je      MUDA_PARA_TAB_7
+			cmp     cl, 8
+			je      MUDA_PARA_TAB_8
+			cmp     cl, 9
+			je      MUDA_PARA_TAB_9
 
+			jmp     fim
 MUDA_JOGADOR_PARA_O:
 			mov 	byte ptr [JogadorAtual], 'O'
 			dec     num_jogadas
-			jmp 	CICLO
+			mov     cl, proximoTab
+			mov     jogoAtual, cl
+			cmp     cl, 1
+			je      MUDA_PARA_TAB_1
+			cmp     cl, 2
+			je      MUDA_PARA_TAB_2
+			cmp     cl, 3
+			je      MUDA_PARA_TAB_3
+			cmp     cl, 4
+			je      MUDA_PARA_TAB_4
+			cmp     cl, 5
+			je      MUDA_PARA_TAB_5
+			cmp     cl, 6
+			je      MUDA_PARA_TAB_6
+			cmp     cl, 7
+			je      MUDA_PARA_TAB_7
+			cmp     cl, 8
+			je      MUDA_PARA_TAB_8
+			cmp     cl, 9
+			je      MUDA_PARA_TAB_9
+
+			jmp 	fim
 
 PROCURA_VITORIA_TAB_1_INICIO:
 			mov     al, POSx
