@@ -73,6 +73,8 @@ dseg	segment para public 'data'
 		tabuleiro8_O      db      9 dup(?)
 		tabuleiro9_O      db      9 dup(?)
 
+		Vitorias        db      ?, ?, ?, ?, ?, ?, ?, ?, ?
+
 		jogoAtual       db      5                            ;Varia de 1 a 9 e é a referencia a cada tabuleiro
 
 		Car				db	32	; Guarda um caracter do Ecran 
@@ -279,7 +281,8 @@ LER_SETA:
 			CMP 	AL, 27		; ESCAPE para sair
 			JE		fim
 			CMP     AL, 48		; Compara para ver se é '0' ZERO e se for o jogador joga
-			je   	MOSTRA_JOGADA	
+			je   	MOSTRA_JOGADA_TESTES
+			; je   	MOSTRA_JOGADA	
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			; mov		CL, Car
 			; cmp		CL, 32		; S� escreve se for espa�o em branco
@@ -470,6 +473,15 @@ DIREITA:
 			inc		POSx		;Direita
 			jmp		CICLO
 
+MOSTRA_JOGADA_TESTES:
+			goto_xy	POSx, POSy
+			mov		CL, Car
+			cmp		CL, 32		; S� escreve se for espa�o em branco
+			JNE     CICLO
+			mov		ah, 02h		; coloca o caracter lido no ecra
+			mov		dl, [JogadorAtual]
+			jmp     MUDA_JOGADOR
+			int		21H	
 
 MOSTRA_JOGADA:
 			goto_xy	POSx, POSy
@@ -479,38 +491,29 @@ MOSTRA_JOGADA:
 			mov		ah, 02h		; coloca o caracter lido no ecra
 			mov		dl, [JogadorAtual]
 			int		21H	
-			jmp 	PROCURA_VITORIA
+			jmp 	PROCURA_VITORIA_TAB
 
-PROCURA_VITORIA:
-			xor     si, si
-			mov     al, jogoAtual
-			cmp     al, 1
-			je      PROCURA_VITORIA_TAB_1
-			cmp     al, 2
-			je      PROCURA_VITORIA_TAB_2
-			cmp     al, 3
-			je      PROCURA_VITORIA_TAB_3
-			cmp     al, 4
-			je      PROCURA_VITORIA_TAB_4
-			cmp     al, 5
-			je      PROCURA_VITORIA_TAB_5
-			cmp     al, 6
-			je      PROCURA_VITORIA_TAB_6
-			cmp     al, 7
-			je      PROCURA_VITORIA_TAB_7
-			cmp     al, 8
-			je      PROCURA_VITORIA_TAB_8
-			cmp     al, 9
-			je      PROCURA_VITORIA_TAB_9
-
-			mov     al, num_jogadas
-			cmp     al, 0
-			je      fim
-			mov 	al, JogadorAtual
-			cmp 	al, 'O'
-			je      MUDA_JOGADOR_PARA_X
-			cmp 	al, 'X'
-			je      MUDA_JOGADOR_PARA_O
+PROCURA_VITORIA_TAB:
+			; xor     si, si
+			; mov     al, jogoAtual
+			; cmp     al, 1
+			; je      PROCURA_VITORIA_TAB_1_INICIO
+			; cmp     al, 2
+			; je      PROCURA_VITORIA_TAB_2_INICIO
+			; cmp     al, 3
+			; je      PROCURA_VITORIA_TAB_3_INICIO
+			; cmp     al, 4
+			; je      PROCURA_VITORIA_TAB_4_INICIO
+			; cmp     al, 5
+			; je      PROCURA_VITORIA_TAB_5_INICIO
+			; cmp     al, 6
+			; je      PROCURA_VITORIA_TAB_6_INICIO
+			; cmp     al, 7
+			; je      PROCURA_VITORIA_TAB_7_INICIO
+			; cmp     al, 8
+			; je      PROCURA_VITORIA_TAB_8_INICIO
+			; cmp     al, 9
+			; je      PROCURA_VITORIA_TAB_9_INICIO
 			jmp     fim
 
 MUDA_JOGADOR_PARA_X:
@@ -523,7 +526,7 @@ MUDA_JOGADOR_PARA_O:
 			dec     num_jogadas
 			jmp 	CICLO
 
-PROCURA_VITORIA_TAB_1:
+PROCURA_VITORIA_TAB_1_INICIO:
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 4
@@ -548,15 +551,31 @@ PROCURA_VITORIA_TAB_1_POS_1:
 			; VER SE O JOGADOR é X ou O
 			mov 	al, JogadorAtual
 			cmp     al, 'X'
-			je      ATUALIZA_ARRAY_TAB_1_X
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_1_X
+			cmp     al, 'O'
+			je      ATUALIZA_ARRAY_TAB_1_ESPACO_1_O
 			; MUDAR a combinaçao atual do array
 
 
-ATUALIZA_ARRAY_TAB_1_X:
-			
+ATUALIZA_ARRAY_TAB_1_ESPACO_1_X:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro1_X], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp  PROCURA_VITORIA_TAB_1_FIM
+
+
+ATUALIZA_ARRAY_TAB_1_ESPACO_1_O:
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [tabuleiro1_O], al ; Move the value from AL into the memory location tabuleiro1_X
+			jmp     PROCURA_VITORIA_TAB_1_FIM
 
 PROCURA_VITORIA_TAB_1_POS_4:
-
+; 			; VER SE O JOGADOR é X ou O
+; 			mov 	al, JogadorAtual
+; 			cmp     al, 'X'
+; 			je      ATUALIZA_ARRAY_TAB_1_ESPACO_4_X
+; 			cmp     al, 'O'
+; 			je      ATUALIZA_ARRAY_TAB_1_ESPACO_4_O
+; 			; MUDAR a combinaçao atual do array
 
 PROCURA_VITORIA_TAB_1_POS_7:
 
@@ -599,7 +618,108 @@ PROCURA_VITORIA_TAB_1_POS_6:
 PROCURA_VITORIA_TAB_1_POS_9:
 
 
+PROCURA_VITORIA_TAB_1_FIM:
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays
 
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays
+
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays
+
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays
+
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays
+
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays
+
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays
+
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays
+
+			jmp  	MUDA_JOGADOR
+
+			compare_arrays:
+					; Retrieve the combination array from the stack
+					pop si
+
+					; Calculate the size of the arrays
+					mov cl, 9  ; Number of elements in the arrays
+
+					; Point to the start of the arrays
+					lea bp, tabuleiro1_X
+
+					; Loop to compare elements
+				compare_loop:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao
+
+						; Move to the next element
+						inc si
+						inc bp
+
+						; Decrement the loop counter
+						loop compare_loop
+
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  [Vitorias], al ; Move the value from AL into the memory location tabuleiro1_X
+					; jmp     PROCURA_VITORIA_TOTAL
+					ret
+
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao:
+					ret
+
+			jmp     fim
+
+
+MUDA_JOGADOR:
+			mov     al, num_jogadas
+			cmp     al, 0
+			je      fim
+			mov 	al, JogadorAtual
+			cmp 	al, 'O'
+			je      MUDA_JOGADOR_PARA_X
+			cmp 	al, 'X'
+			je      MUDA_JOGADOR_PARA_O
+			jmp     fim
+
+PROCURA_VITORIA_TOTAL:
 
 ESTEND_JOGO:		;Verificar se pode andar
 			cmp 	al,48h
