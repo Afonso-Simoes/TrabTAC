@@ -284,7 +284,7 @@ LER_SETA:
 			je   	MOSTRA_JOGADA_TESTES
 			; je   	MOSTRA_JOGADA	
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
-			
+
 			jmp		LER_SETA
 
 LER_SETA_NOMES:
@@ -436,6 +436,8 @@ ESTEND:		;Verificar se pode andar
 			mov 	cl, POSy
 			cmp 	cl, 2
 			je 		ESQUERDA
+			cmp     cl, 4
+			je      ESQUERDA
 			cmp 	al,48h
 			jne		BAIXO
 			dec		POSy		;cima
@@ -717,6 +719,8 @@ PROCURA_VITORIA_TOTAL:
 ESTEND_JOGO:		;Verificar se pode andar
 			cmp 	al,48h
 			jne		BAIXO_JOGO
+			mov     cl, jogoAtual
+			;cmp     cl, 1                    ;Comparar de 1 a 9 e depois bloquear conforme
 			dec		POSy		;cima
 			jmp		CICLO
 
