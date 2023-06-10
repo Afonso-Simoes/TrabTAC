@@ -508,6 +508,20 @@ MOSTRA_JOGADA:
 			JNE     CICLO
 			mov		ah, 02h					; coloca o caracter lido no ecra
 			mov		dl, [JogadorAtual]
+			; MOV AL, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+			; MOV AH, BYTE PTR [JogadorAtual+1]  ; Load the color attribute from the variable into AH
+
+			; Set cursor position using BIOS interrupt 10h
+			; MOV BH, 0   ; Page number (usually 0)
+			; MOV DL, POSx  ; Column position (X coordinate)
+			; MOV DH, POSy  ; Row position (Y coordinate)
+			; MOV AH, 02h  ; BIOS interrupt 10h function 02h - Set Cursor Position
+			; INT 10h     ; Call BIOS interrupt 10h to set the cursor position
+
+			; ; Display the character using BIOS interrupt 10h
+			; MOV AH, 0Eh  ; Display function code (0Eh - Teletype Output)
+			; INT 10h     ; Call BIOS interrupt 10h to display the character and color attribute
+			
 			int		21H	
 			jmp 	PROCURA_VITORIA_TAB
 
@@ -583,6 +597,12 @@ MUDA_PARA_TAB_9:
 
 MUDA_JOGADOR_PARA_X:
 			mov 	byte ptr [JogadorAtual], 'X'
+			; MOV AL, 'X' ; Move the character to AL register
+			; MOV AH, 1Fh      ; Move the color attribute to AH register
+			; MOV BYTE PTR [JogadorAtual], AL ; Store the character in the video memory
+			; MOV BYTE PTR [JogadorAtual+1], AH ; Store the color attribute in the video memory
+
+
 			dec     num_jogadas
 			mov     cl, proximoTab
 			mov     jogoAtual, cl
@@ -606,6 +626,12 @@ MUDA_JOGADOR_PARA_X:
 			je      MUDA_PARA_TAB_9
 MUDA_JOGADOR_PARA_O:
 			mov 	byte ptr [JogadorAtual], 'O'
+
+			; MOV AL, 'O' ; Move the character to AL register
+			; MOV AH, 0Eh       ; Move the color attribute to AH register
+			; MOV BYTE PTR [JogadorAtual], AL ; Store the character in the video memory
+			; MOV BYTE PTR [JogadorAtual+1], AH ; Store the color attribute in the video memory
+
 			dec     num_jogadas
 			mov     cl, proximoTab
 			mov     jogoAtual, cl
@@ -890,12 +916,9 @@ ATUALIZA_ARRAY_TAB_1_ESPACO_9_O:
 			mov  si, 8
 			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
 			jmp  PROCURA_VITORIA_TAB_1_FIM_O
-
-PROCURA_VITORIA_TAB1_FIM_X:
-
-
 PROCURA_VITORIA_TAB_1_FIM_X:
 		jmp     MUDA_JOGADOR
+		
 ; 		; Procurar vitoria no Tabuleiro 1
 ; 		; Push the address of combinacao1 onto the stack
 ; 		lea  si, combinacao1
@@ -985,90 +1008,90 @@ PROCURA_VITORIA_TAB_1_FIM_X:
 
 PROCURA_VITORIA_TAB_1_FIM_O:
 		jmp     MUDA_JOGADOR
-; 		; Procurar vitoria no Tabuleiro 1
-; 		; Push the address of combinacao1 onto the stack
-; 		lea  si, combinacao1
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_O
+		; Procurar vitoria no Tabuleiro 1
+		; Push the address of combinacao1 onto the stack
+		lea  si, combinacao1
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_1_O
 
-; 		; Push the address of combinacao2 onto the stack
-; 		lea  si, combinacao2
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_O
+		; Push the address of combinacao2 onto the stack
+		lea  si, combinacao2
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_1_O
 
-; 		; Push the address of combinacao3 onto the stack
-; 		lea  si, combinacao3
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_O
+		; Push the address of combinacao3 onto the stack
+		lea  si, combinacao3
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_1_O
 
-; 		; Push the address of combinacao4 onto the stack
-; 		lea  si, combinacao4
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_O
+		; Push the address of combinacao4 onto the stack
+		lea  si, combinacao4
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_1_O
 
-; 		; Push the address of combinacao5 onto the stack
-; 		lea  si, combinacao5
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_O
+		; Push the address of combinacao5 onto the stack
+		lea  si, combinacao5
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_1_O
 
-; 		; Push the address of combinacao6 onto the stack
-; 		lea  si, combinacao6
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_O
+		; Push the address of combinacao6 onto the stack
+		lea  si, combinacao6
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_1_O
 
-; 		; Push the address of combinacao7 onto the stack
-; 		lea  si, combinacao7
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_O
+		; Push the address of combinacao7 onto the stack
+		lea  si, combinacao7
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_1_O
 
-; 		; Push the address of combinacao8 onto the stack
-; 		lea  si, combinacao8
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_O
+		; Push the address of combinacao8 onto the stack
+		lea  si, combinacao8
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_1_O
 
-; 		jmp   MUDA_JOGADOR
+		jmp   MUDA_JOGADOR
 
-; compare_arrays_1_O:
-; 		; Retrieve the combination array from the stack
-; 		pop si
+compare_arrays_1_O:
+		; Retrieve the combination array from the stack
+		pop si
 
-; 		; Calculate the size of the arrays
-; 		mov cx, 9  ; Number of elements in the arrays
+		; Calculate the size of the arrays
+		mov cx, 9  ; Number of elements in the arrays
 
-; 		; Point to the start of the arrays
-; 		lea bp, tabuleiro1_O
+		; Point to the start of the arrays
+		lea bp, tabuleiro1_O
 
-; 		; Loop to compare elements
-; compare_loop_1_O:
-;     	; Compare the current elements
-; 		mov al, [si]
-; 		mov bl, [bp]
-; 		cmp al, bl
-; 		jne endComparacao_1_O
+		; Loop to compare elements
+compare_loop_1_O:
+    	; Compare the current elements
+		mov al, [si]
+		mov bl, [bp]
+		cmp al, bl
+		jne endComparacao_1_O
 
-; 		; Move to the next element
-; 		inc si
-; 		inc bp
+		; Move to the next element
+		inc si
+		inc bp
 
-; 		; Decrement the loop counter
-; 		loop compare_loop_1_O
+		; Decrement the loop counter
+		loop compare_loop_1_O
 
-; 		mov  al, 1              ; Move the value 1 into the AL register
-; 		mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
-; 		jmp   MUDA_JOGADOR
-; 		ret
+		mov  al, 1              ; Move the value 1 into the AL register
+		mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+		jmp   MUDA_JOGADOR
+		ret
 
-; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DETECTADA UMA VITORIA NO TABULEIRO
-; endComparacao_1_O:
-;     	ret
+;SE CHEGAR A ESTE PONTO E PORQUE FOI DETECTADA UMA VITORIA NO TABULEIRO
+endComparacao_1_O:
+    	ret
 
 
 ;############################################### TODA A LOGICA DO TABULEIRO 2 ###############################
@@ -1337,183 +1360,183 @@ ATUALIZA_ARRAY_TAB_2_ESPACO_9_O:
 
 PROCURA_VITORIA_TAB_2_FIM_X:
 		jmp     MUDA_JOGADOR
-; 		; Procurar vitoria no Tabuleiro 2
-; 		; Push the address of combinacao1 onto the stack
-; 		lea  si, combinacao1
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_2_X
+		; Procurar vitoria no Tabuleiro 2
+		; Push the address of combinacao1 onto the stack
+		lea  si, combinacao1
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_2_X
 
-; 		; Push the address of combinacao2 onto the stack
-; 		lea  si, combinacao2
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_2_X
+		; Push the address of combinacao2 onto the stack
+		lea  si, combinacao2
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_2_X
 
-; 		; Push the address of combinacao3 onto the stack
-; 		lea  si, combinacao3
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_2_X
+		; Push the address of combinacao3 onto the stack
+		lea  si, combinacao3
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_2_X
 
-; 		; Push the address of combinacao4 onto the stack
-; 		lea  si, combinacao4
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_2_X
+		; Push the address of combinacao4 onto the stack
+		lea  si, combinacao4
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_2_X
 
-; 		; Push the address of combinacao5 onto the stack
-; 		lea  si, combinacao5
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_2_X
+		; Push the address of combinacao5 onto the stack
+		lea  si, combinacao5
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_2_X
 
-; 		; Push the address of combinacao6 onto the stack
-; 		lea  si, combinacao6
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_2_X
+		; Push the address of combinacao6 onto the stack
+		lea  si, combinacao6
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_2_X
 
-; 		; Push the address of combinacao7 onto the stack
-; 		lea  si, combinacao7
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_2_X
+		; Push the address of combinacao7 onto the stack
+		lea  si, combinacao7
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_2_X
 
-; 		; Push the address of combinacao8 onto the stack
-; 		lea  si, combinacao8
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_2_X
+		; Push the address of combinacao8 onto the stack
+		lea  si, combinacao8
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_2_X
 
-; 		jmp  	MUDA_JOGADOR
+		jmp  	MUDA_JOGADOR
 
-; compare_arrays_2_X:
-; 		; Retrieve the combination array from the stack
-; 		pop si
+compare_arrays_2_X:
+		; Retrieve the combination array from the stack
+		pop si
 
-; 		; Calculate the size of the arrays
-; 		mov cx, 9  ; Number of elements in the arrays
+		; Calculate the size of the arrays
+		mov cx, 9  ; Number of elements in the arrays
 
-; 		; Point to the start of the arrays
-; 		lea bp, tabuleiro2_X
+		; Point to the start of the arrays
+		lea bp, tabuleiro2_X
 
-; 		; Loop to compare elements
-; compare_loop_2_X:
-; 		; Compare the current elements
-; 		mov al, [si]
-; 		mov bl, [bp]
-; 		cmp al, bl
-; 		; cmp byte [si], [bp]
-; 		jne endComparacao_2_X
+		; Loop to compare elements
+compare_loop_2_X:
+		; Compare the current elements
+		mov al, [si]
+		mov bl, [bp]
+		cmp al, bl
+		; cmp byte [si], [bp]
+		jne endComparacao_2_X
 
-; 		; Move to the next element
-; 		inc si
-; 		inc bp
+		; Move to the next element
+		inc si
+		inc bp
 
-; 		; Decrement the loop counter
-; 		loop compare_loop_2_X
+		; Decrement the loop counter
+		loop compare_loop_2_X
 
-; 		mov  al, 1              ; Move the value 1 into the AL register
-; 		mov  si, 1
-; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro2_X
-; 		; jmp     PROCURA_VITORIA_TOTAL~
-; 		jmp  	MUDA_JOGADOR
-; 		ret
+		mov  al, 1              ; Move the value 1 into the AL register
+		mov  si, 1
+		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro2_X
+		; jmp     PROCURA_VITORIA_TOTAL~
+		jmp  	MUDA_JOGADOR
+		ret
 
-; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-; endComparacao_2_X:
-; 		ret
+;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+endComparacao_2_X:
+		ret
 
 PROCURA_VITORIA_TAB_2_FIM_O:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 2
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_2_O
+			; Procurar vitoria no Tabuleiro 2
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_2_O
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_2_O
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_2_O
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_2_O
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_2_O
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_2_O
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_2_O
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_2_O
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_2_O
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_2_O
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_2_O
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_2_O
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_2_O
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_2_O
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_2_O
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_2_O:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_2_O:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro2_O
+					; Point to the start of the arrays
+					lea bp, tabuleiro2_O
 
-			; 		; Loop to compare elements
-			; 	compare_loop_2_O:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_2_O
+					; Loop to compare elements
+				compare_loop_2_O:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_2_O
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_2_O
+						; Decrement the loop counter
+						loop compare_loop_2_O
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 1
-			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro2_O
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 1
+					mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro2_O
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_2_O:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_2_O:
+					ret
 
 ;############################################### TODA A LOGICA DO TABULEIRO 3 ###############################
 
@@ -1781,183 +1804,183 @@ ATUALIZA_ARRAY_TAB_3_ESPACO_9_O:
 
 PROCURA_VITORIA_TAB_3_FIM_X:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 3
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_X
+			; Procurar vitoria no Tabuleiro 3
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_X
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_X
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_X
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_X
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_X
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_X
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_X
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_X
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_X
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_X
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_X
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_X
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_X
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_X
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_X
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_3_X:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_3_X:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro3_X
+					; Point to the start of the arrays
+					lea bp, tabuleiro3_X
 
-			; 		; Loop to compare elements
-			; 	compare_loop_3_X:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_3_X
+					; Loop to compare elements
+				compare_loop_3_X:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_3_X
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_3_X
+						; Decrement the loop counter
+						loop compare_loop_3_X
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 2
-			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro3_X
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 2
+					mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro3_X
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_3_X:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_3_X:
+					ret
 
 PROCURA_VITORIA_TAB_3_FIM_O:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 3
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_O
+			; Procurar vitoria no Tabuleiro 3
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_O
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_O
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_O
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_O
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_O
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_O
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_O
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_O
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_O
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_O
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_O
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_O
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_O
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_3_O
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_3_O
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_3_O:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_3_O:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro3_O
+					; Point to the start of the arrays
+					lea bp, tabuleiro3_O
 
-			; 		; Loop to compare elements
-			; 	compare_loop_3_O:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_3_O
+					; Loop to compare elements
+				compare_loop_3_O:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_3_O
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_3_O
+						; Decrement the loop counter
+						loop compare_loop_3_O
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 2
-			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro3_O
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 2
+					mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro3_O
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_3_O:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_3_O:
+					ret
 
 ;############################################ TODA A LOGICA DO TABULEIRO 4 #############################
 PROCURA_VITORIA_TAB_4_INICIO:
@@ -2224,183 +2247,183 @@ ATUALIZA_ARRAY_TAB_4_ESPACO_9_O:
 
 PROCURA_VITORIA_TAB_4_FIM_X:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 1
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_X
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_X
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_X
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_X
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_X
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_X
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_X
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_X
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_X
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_X
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_X
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_X
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_X
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_X
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_X
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_X
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_4_X:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_4_X:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro4_X
+					; Point to the start of the arrays
+					lea bp, tabuleiro4_X
 
-			; 		; Loop to compare elements
-			; 	compare_loop_4_X:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_4_X
+					; Loop to compare elements
+				compare_loop_4_X:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_4_X
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_4_X
+						; Decrement the loop counter
+						loop compare_loop_4_X
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 3
-			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro4_X
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 3
+					mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro4_X
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_4_X:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_4_X:
+					ret
 
 PROCURA_VITORIA_TAB_4_FIM_O:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 1
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_O
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_O
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_O
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_O
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_O
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_O
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_O
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_O
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_O
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_O
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_O
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_O
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_O
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_O
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_4_O
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_4_O
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_4_O:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_4_O:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro4_O
+					; Point to the start of the arrays
+					lea bp, tabuleiro4_O
 
-			; 		; Loop to compare elements
-			; 	compare_loop_4_O:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_4_O
+					; Loop to compare elements
+				compare_loop_4_O:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_4_O
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_4_O
+						; Decrement the loop counter
+						loop compare_loop_4_O
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 3
-			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro4_O
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 3
+					mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro4_O
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_4_O:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_4_O:
+					ret
 
 ;############################################ TODA A LOGICA DO TABULEIRO 5 #############################
 PROCURA_VITORIA_TAB_5_INICIO:
@@ -2667,183 +2690,183 @@ ATUALIZA_ARRAY_TAB_5_ESPACO_9_O:
 
 PROCURA_VITORIA_TAB_5_FIM_X:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 1
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_X
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_X
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_X
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_X
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_X
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_X
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_X
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_X
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_X
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_X
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_X
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_X
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_X
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_X
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_X
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_X
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_5_X:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_5_X:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro5_X
+					; Point to the start of the arrays
+					lea bp, tabuleiro5_X
 
-			; 		; Loop to compare elements
-			; 	compare_loop_5_X:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_5_X
+					; Loop to compare elements
+				compare_loop_5_X:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_5_X
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_5_X
+						; Decrement the loop counter
+						loop compare_loop_5_X
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 4
-			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro5_X
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 4
+					mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro5_X
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_5_X:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_5_X:
+					ret
 
 PROCURA_VITORIA_TAB_5_FIM_O:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 1
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_O
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_O
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_O
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_O
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_O
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_O
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_O
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_O
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_O
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_O
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_O
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_O
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_O
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_O
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_5_O
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_5_O
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_5_O:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_5_O:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro5_O
+					; Point to the start of the arrays
+					lea bp, tabuleiro5_O
 
-			; 		; Loop to compare elements
-			; 	compare_loop_5_O:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_5_O
+					; Loop to compare elements
+				compare_loop_5_O:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_5_O
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_5_O
+						; Decrement the loop counter
+						loop compare_loop_5_O
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 4
-			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro5_O
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 4
+					mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro5_O
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_5_O:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_5_O:
+					ret
 
 ;############################################ TODA A LOGICA DO TABULEIRO 6 #############################
 PROCURA_VITORIA_TAB_6_INICIO:
@@ -3110,183 +3133,183 @@ ATUALIZA_ARRAY_TAB_6_ESPACO_9_O:
 
 PROCURA_VITORIA_TAB_6_FIM_X:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 1
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_X
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_X
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_X
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_X
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_X
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_X
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_X
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_X
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_X
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_X
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_X
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_X
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_X
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_X
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_X
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_X
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_6_X:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_6_X:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro4_X
+					; Point to the start of the arrays
+					lea bp, tabuleiro4_X
 
-			; 		; Loop to compare elements
-			; 	compare_loop_6_X:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_6_X
+					; Loop to compare elements
+				compare_loop_6_X:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_6_X
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_6_X
+						; Decrement the loop counter
+						loop compare_loop_6_X
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 5
-			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro6_X
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 5
+					mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro6_X
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_6_X:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_6_X:
+					ret
 
 PROCURA_VITORIA_TAB_6_FIM_O:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 1
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_O
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_O
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_O
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_O
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_O
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_O
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_O
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_O
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_O
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_O
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_O
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_O
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_O
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_O
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_6_O
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_6_O
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_6_O:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_6_O:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro4_O
+					; Point to the start of the arrays
+					lea bp, tabuleiro4_O
 
-			; 		; Loop to compare elements
-			; 	compare_loop_6_O:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_6_O
+					; Loop to compare elements
+				compare_loop_6_O:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_6_O
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_6_O
+						; Decrement the loop counter
+						loop compare_loop_6_O
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 5
-			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro6_O
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 5
+					mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro6_O
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_6_O:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_6_O:
+					ret
 
 ;############################################ TODA A LOGICA DO TABULEIRO 7 #############################
 PROCURA_VITORIA_TAB_7_INICIO:
@@ -3553,183 +3576,183 @@ ATUALIZA_ARRAY_TAB_7_ESPACO_9_O:
 
 PROCURA_VITORIA_TAB_7_FIM_X:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 1
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_X
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_X
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_X
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_X
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_X
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_X
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_X
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_X
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_X
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_X
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_X
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_X
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_X
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_X
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_X
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_X
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_7_X:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_7_X:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro7_X
+					; Point to the start of the arrays
+					lea bp, tabuleiro7_X
 
-			; 		; Loop to compare elements
-			; 	compare_loop_7_X:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_7_X
+					; Loop to compare elements
+				compare_loop_7_X:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_7_X
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_7_X
+						; Decrement the loop counter
+						loop compare_loop_7_X
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 6
-			; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro7_X
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 6
+					mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro7_X
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_7_X:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_7_X:
+					ret
 
 PROCURA_VITORIA_TAB_7_FIM_O:
 		jmp     MUDA_JOGADOR
-			; ; Procurar vitoria no Tabuleiro 1
-			; ; Push the address of combinacao1 onto the stack
-			; lea  si, combinacao1
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_O
+			; Procurar vitoria no Tabuleiro 1
+			; Push the address of combinacao1 onto the stack
+			lea  si, combinacao1
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_O
 
-			; ; Push the address of combinacao2 onto the stack
-			; lea  si, combinacao2
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_O
+			; Push the address of combinacao2 onto the stack
+			lea  si, combinacao2
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_O
 
-			; ; Push the address of combinacao3 onto the stack
-			; lea  si, combinacao3
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_O
+			; Push the address of combinacao3 onto the stack
+			lea  si, combinacao3
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_O
 
-			; ; Push the address of combinacao4 onto the stack
-			; lea  si, combinacao4
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_O
+			; Push the address of combinacao4 onto the stack
+			lea  si, combinacao4
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_O
 
-			; ; Push the address of combinacao5 onto the stack
-			; lea  si, combinacao5
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_O
+			; Push the address of combinacao5 onto the stack
+			lea  si, combinacao5
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_O
 
-			; ; Push the address of combinacao6 onto the stack
-			; lea  si, combinacao6
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_O
+			; Push the address of combinacao6 onto the stack
+			lea  si, combinacao6
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_O
 
-			; ; Push the address of combinacao7 onto the stack
-			; lea  si, combinacao7
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_O
+			; Push the address of combinacao7 onto the stack
+			lea  si, combinacao7
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_O
 
-			; ; Push the address of combinacao8 onto the stack
-			; lea  si, combinacao8
-			; push si
-			; ; Call the compare_arrays subroutine
-			; call compare_arrays_7_O
+			; Push the address of combinacao8 onto the stack
+			lea  si, combinacao8
+			push si
+			; Call the compare_arrays subroutine
+			call compare_arrays_7_O
 
-			; jmp  	MUDA_JOGADOR
+			jmp  	MUDA_JOGADOR
 
-			; compare_arrays_7_O:
-			; 		; Retrieve the combination array from the stack
-			; 		pop si
+			compare_arrays_7_O:
+					; Retrieve the combination array from the stack
+					pop si
 
-			; 		; Calculate the size of the arrays
-			; 		mov cx, 9  ; Number of elements in the arrays
+					; Calculate the size of the arrays
+					mov cx, 9  ; Number of elements in the arrays
 
-			; 		; Point to the start of the arrays
-			; 		lea bp, tabuleiro7_O
+					; Point to the start of the arrays
+					lea bp, tabuleiro7_O
 
-			; 		; Loop to compare elements
-			; 	compare_loop_7_O:
-			; 			; Compare the current elements
-			; 			mov al, [si]
-			; 			mov bl, [bp]
-			; 			cmp al, bl
-			; 			; cmp byte [si], [bp]
-			; 			jne endComparacao_7_O
+					; Loop to compare elements
+				compare_loop_7_O:
+						; Compare the current elements
+						mov al, [si]
+						mov bl, [bp]
+						cmp al, bl
+						; cmp byte [si], [bp]
+						jne endComparacao_7_O
 
-			; 			; Move to the next element
-			; 			inc si
-			; 			inc bp
+						; Move to the next element
+						inc si
+						inc bp
 
-			; 			; Decrement the loop counter
-			; 			loop compare_loop_7_O
+						; Decrement the loop counter
+						loop compare_loop_7_O
 
-			; 		mov  al, 1              ; Move the value 1 into the AL register
-			; 		mov  si, 6
-			; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro7_O
-			; 		; jmp     PROCURA_VITORIA_TOTAL
-			; 		jmp  	MUDA_JOGADOR
-			; 		ret
+					mov  al, 1              ; Move the value 1 into the AL register
+					mov  si, 6
+					mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro7_O
+					; jmp     PROCURA_VITORIA_TOTAL
+					jmp  	MUDA_JOGADOR
+					ret
 
-			; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			; endComparacao_7_O:
-			; 		ret
+			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+			endComparacao_7_O:
+					ret
 
 ;############################################ TODA A LOGICA DO TABULEIRO 8 #############################
 PROCURA_VITORIA_TAB_8_INICIO:
@@ -3996,183 +4019,183 @@ ATUALIZA_ARRAY_TAB_8_ESPACO_9_O:
 
 PROCURA_VITORIA_TAB_8_FIM_X:
 		jmp     MUDA_JOGADOR
-; 		; Procurar vitoria no Tabuleiro 1
-; 		; Push the address of combinacao1 onto the stack
-; 		lea  si, combinacao1
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_X
+		; Procurar vitoria no Tabuleiro 1
+		; Push the address of combinacao1 onto the stack
+		lea  si, combinacao1
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_X
 
-; 		; Push the address of combinacao2 onto the stack
-; 		lea  si, combinacao2
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_X
+		; Push the address of combinacao2 onto the stack
+		lea  si, combinacao2
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_X
 
-; 		; Push the address of combinacao3 onto the stack
-; 		lea  si, combinacao3
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_X
+		; Push the address of combinacao3 onto the stack
+		lea  si, combinacao3
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_X
 
-; 		; Push the address of combinacao4 onto the stack
-; 		lea  si, combinacao4
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_X
+		; Push the address of combinacao4 onto the stack
+		lea  si, combinacao4
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_X
 
-; 		; Push the address of combinacao5 onto the stack
-; 		lea  si, combinacao5
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_X
+		; Push the address of combinacao5 onto the stack
+		lea  si, combinacao5
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_X
 
-; 		; Push the address of combinacao6 onto the stack
-; 		lea  si, combinacao6
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_X
+		; Push the address of combinacao6 onto the stack
+		lea  si, combinacao6
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_X
 
-; 		; Push the address of combinacao7 onto the stack
-; 		lea  si, combinacao7
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_X
+		; Push the address of combinacao7 onto the stack
+		lea  si, combinacao7
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_X
 
-; 		; Push the address of combinacao8 onto the stack
-; 		lea  si, combinacao8
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_X
+		; Push the address of combinacao8 onto the stack
+		lea  si, combinacao8
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_X
 
-; 		jmp  	MUDA_JOGADOR
+		jmp  	MUDA_JOGADOR
 
-; compare_arrays_8_X:
-; 		; Retrieve the combination array from the stack
-; 		pop si
+compare_arrays_8_X:
+		; Retrieve the combination array from the stack
+		pop si
 
-; 		; Calculate the size of the arrays
-; 		mov cx, 9  ; Number of elements in the arrays
+		; Calculate the size of the arrays
+		mov cx, 9  ; Number of elements in the arrays
 
-; 		; Point to the start of the arrays
-; 		lea bp, tabuleiro8_X
+		; Point to the start of the arrays
+		lea bp, tabuleiro8_X
 
-; 		; Loop to compare elements
-; compare_loop_8_X:
-; 		; Compare the current elements
-; 		mov al, [si]
-; 		mov bl, [bp]
-; 		cmp al, bl
-; 		; cmp byte [si], [bp]
-; 		jne endComparacao_8_X
+		; Loop to compare elements
+compare_loop_8_X:
+		; Compare the current elements
+		mov al, [si]
+		mov bl, [bp]
+		cmp al, bl
+		; cmp byte [si], [bp]
+		jne endComparacao_8_X
 
-; 		; Move to the next element
-; 		inc si
-; 		inc bp
+		; Move to the next element
+		inc si
+		inc bp
 
-; 		; Decrement the loop counter
-; 		loop compare_loop_8_X
+		; Decrement the loop counter
+		loop compare_loop_8_X
 
-; 		mov  al, 1              ; Move the value 1 into the AL register
-; 		mov  si, 7
-; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro8_X
-; 		; jmp     PROCURA_VITORIA_TOTAL
-; 		jmp  	MUDA_JOGADOR
-; 		ret
+		mov  al, 1              ; Move the value 1 into the AL register
+		mov  si, 7
+		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro8_X
+		; jmp     PROCURA_VITORIA_TOTAL
+		jmp  	MUDA_JOGADOR
+		ret
 
-; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-; endComparacao_8_X:
-; 		ret
+;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+endComparacao_8_X:
+		ret
 
 PROCURA_VITORIA_TAB_8_FIM_O:
 		jmp     MUDA_JOGADOR
-; 		; Procurar vitoria no Tabuleiro 1
-; 		; Push the address of combinacao1 onto the stack
-; 		lea  si, combinacao1
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_O
+		; Procurar vitoria no Tabuleiro 1
+		; Push the address of combinacao1 onto the stack
+		lea  si, combinacao1
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_O
 
-; 		; Push the address of combinacao2 onto the stack
-; 		lea  si, combinacao2
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_O
+		; Push the address of combinacao2 onto the stack
+		lea  si, combinacao2
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_O
 
-; 		; Push the address of combinacao3 onto the stack
-; 		lea  si, combinacao3
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_O
+		; Push the address of combinacao3 onto the stack
+		lea  si, combinacao3
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_O
 
-; 		; Push the address of combinacao4 onto the stack
-; 		lea  si, combinacao4
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_O
+		; Push the address of combinacao4 onto the stack
+		lea  si, combinacao4
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_O
 
-; 		; Push the address of combinacao5 onto the stack
-; 		lea  si, combinacao5
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_O
+		; Push the address of combinacao5 onto the stack
+		lea  si, combinacao5
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_O
 
-; 		; Push the address of combinacao6 onto the stack
-; 		lea  si, combinacao6
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_O
+		; Push the address of combinacao6 onto the stack
+		lea  si, combinacao6
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_O
 
-; 		; Push the address of combinacao7 onto the stack
-; 		lea  si, combinacao7
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_O
+		; Push the address of combinacao7 onto the stack
+		lea  si, combinacao7
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_O
 
-; 		; Push the address of combinacao8 onto the stack
-; 		lea  si, combinacao8
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_8_O
+		; Push the address of combinacao8 onto the stack
+		lea  si, combinacao8
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_8_O
 
-; 		jmp  	MUDA_JOGADOR
+		jmp  	MUDA_JOGADOR
 
-; compare_arrays_8_O:
-; 		; Retrieve the combination array from the stack
-; 		pop si
+compare_arrays_8_O:
+		; Retrieve the combination array from the stack
+		pop si
 
-; 		; Calculate the size of the arrays
-; 		mov cx, 9  ; Number of elements in the arrays
+		; Calculate the size of the arrays
+		mov cx, 9  ; Number of elements in the arrays
 
-; 		; Point to the start of the arrays
-; 		lea bp, tabuleiro8_O
+		; Point to the start of the arrays
+		lea bp, tabuleiro8_O
 
-; 		; Loop to compare elements
-; compare_loop_8_O:
-; 		; Compare the current elements
-; 		mov al, [si]
-; 		mov bl, [bp]
-; 		cmp al, bl
-; 		; cmp byte [si], [bp]
-; 		jne endComparacao_8_O
+		; Loop to compare elements
+compare_loop_8_O:
+		; Compare the current elements
+		mov al, [si]
+		mov bl, [bp]
+		cmp al, bl
+		; cmp byte [si], [bp]
+		jne endComparacao_8_O
 
-; 		; Move to the next element
-; 		inc si
-; 		inc bp
+		; Move to the next element
+		inc si
+		inc bp
 
-; 		; Decrement the loop counter
-; 		loop compare_loop_8_O
+		; Decrement the loop counter
+		loop compare_loop_8_O
 
-; 		mov  al, 1              ; Move the value 1 into the AL register
-; 		mov  si, 7
-; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro8_O
-; 		; jmp     PROCURA_VITORIA_TOTAL
-; 		jmp  	MUDA_JOGADOR
-; 		ret
+		mov  al, 1              ; Move the value 1 into the AL register
+		mov  si, 7
+		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro8_O
+		; jmp     PROCURA_VITORIA_TOTAL
+		jmp  	MUDA_JOGADOR
+		ret
 
-; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-; endComparacao_8_O:
-; 		ret
+;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+endComparacao_8_O:
+		ret
 
 ;############################################ TODA A LOGICA DO TABULEIRO 9 #############################
 PROCURA_VITORIA_TAB_9_INICIO:
@@ -4439,184 +4462,184 @@ ATUALIZA_ARRAY_TAB_9_ESPACO_9_O:
 
 PROCURA_VITORIA_TAB_9_FIM_X:
 		jmp     MUDA_JOGADOR
-; 		; Procurar vitoria no Tabuleiro 1
-; 		; Push the address of combinacao1 onto the stack
-; 		lea  si, combinacao1
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_X
+		; Procurar vitoria no Tabuleiro 1
+		; Push the address of combinacao1 onto the stack
+		lea  si, combinacao1
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_X
 
-; 		; Push the address of combinacao2 onto the stack
-; 		lea  si, combinacao2
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_X
+		; Push the address of combinacao2 onto the stack
+		lea  si, combinacao2
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_X
 
-; 		; Push the address of combinacao3 onto the stack
-; 		lea  si, combinacao3
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_X
+		; Push the address of combinacao3 onto the stack
+		lea  si, combinacao3
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_X
 
-; 		; Push the address of combinacao4 onto the stack
-; 		lea  si, combinacao4
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_X
+		; Push the address of combinacao4 onto the stack
+		lea  si, combinacao4
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_X
 
-; 		; Push the address of combinacao5 onto the stack
-; 		lea  si, combinacao5
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_X
+		; Push the address of combinacao5 onto the stack
+		lea  si, combinacao5
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_X
 
-; 		; Push the address of combinacao6 onto the stack
-; 		lea  si, combinacao6
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_X
+		; Push the address of combinacao6 onto the stack
+		lea  si, combinacao6
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_X
 
-; 		; Push the address of combinacao7 onto the stack
-; 		lea  si, combinacao7
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_X
+		; Push the address of combinacao7 onto the stack
+		lea  si, combinacao7
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_X
 
-; 		; Push the address of combinacao8 onto the stack
-; 		lea  si, combinacao8
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_X
+		; Push the address of combinacao8 onto the stack
+		lea  si, combinacao8
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_X
 
-; 		jmp  	MUDA_JOGADOR
+		jmp  	MUDA_JOGADOR
 
-; compare_arrays_9_X:
-; 		; Retrieve the combination array from the stack
-; 		pop si
+compare_arrays_9_X:
+		; Retrieve the combination array from the stack
+		pop si
 
-; 		; Calculate the size of the arrays
-; 		mov cx, 9  ; Number of elements in the arrays
+		; Calculate the size of the arrays
+		mov cx, 9  ; Number of elements in the arrays
 
-; 		; Point to the start of the arrays
-; 		lea bp, tabuleiro9_X
+		; Point to the start of the arrays
+		lea bp, tabuleiro9_X
 
-; 		; Loop to compare elements
-; compare_loop_9_X:
-; 		; Compare the current elements
-; 		mov al, [si]
-; 		mov bl, [bp]
-; 		cmp al, bl
-; 		; cmp byte [si], [bp]
-; 		jne endComparacao_9_X
+		; Loop to compare elements
+compare_loop_9_X:
+		; Compare the current elements
+		mov al, [si]
+		mov bl, [bp]
+		cmp al, bl
+		; cmp byte [si], [bp]
+		jne endComparacao_9_X
 
-; 		; Move to the next element
-; 		inc si
-; 		inc bp
+		; Move to the next element
+		inc si
+		inc bp
 
-; 		; Decrement the loop counter
-; 		loop compare_loop_9_X
+		; Decrement the loop counter
+		loop compare_loop_9_X
 
-; 		mov  al, 1              ; Move the value 1 into the AL register
-; 		mov  si, 8
-; 		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro9_X
-; 		; jmp     PROCURA_VITORIA_TOTAL
-; 		jmp  	MUDA_JOGADOR
-; 		ret
+		mov  al, 1              ; Move the value 1 into the AL register
+		mov  si, 8
+		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro9_X
+		; jmp     PROCURA_VITORIA_TOTAL
+		jmp  	MUDA_JOGADOR
+		ret
 
-; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-; endComparacao_9_X:
-; 		ret
+;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+endComparacao_9_X:
+		ret
 
 PROCURA_VITORIA_TAB_9_FIM_O:
 		jmp     MUDA_JOGADOR
-; 		; Procurar vitoria no Tabuleiro 1
-; 		; Push the address of combinacao1 onto the stack
-; 		lea  si, combinacao1
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_O
+		; Procurar vitoria no Tabuleiro 1
+		; Push the address of combinacao1 onto the stack
+		lea  si, combinacao1
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_O
 
-; 		; Push the address of combinacao2 onto the stack
-; 		lea  si, combinacao2
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_O
+		; Push the address of combinacao2 onto the stack
+		lea  si, combinacao2
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_O
 
-; 		; Push the address of combinacao3 onto the stack
-; 		lea  si, combinacao3
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_O
+		; Push the address of combinacao3 onto the stack
+		lea  si, combinacao3
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_O
 
-; 		; Push the address of combinacao4 onto the stack
-; 		lea  si, combinacao4
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_O
+		; Push the address of combinacao4 onto the stack
+		lea  si, combinacao4
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_O
 
-; 		; Push the address of combinacao5 onto the stack
-; 		lea  si, combinacao5
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_O
+		; Push the address of combinacao5 onto the stack
+		lea  si, combinacao5
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_O
 
-; 		; Push the address of combinacao6 onto the stack
-; 		lea  si, combinacao6
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_O
+		; Push the address of combinacao6 onto the stack
+		lea  si, combinacao6
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_O
 
-; 		; Push the address of combinacao7 onto the stack
-; 		lea  si, combinacao7
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_O
+		; Push the address of combinacao7 onto the stack
+		lea  si, combinacao7
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_O
 
-; 		; Push the address of combinacao8 onto the stack
-; 		lea  si, combinacao8
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_9_O
+		; Push the address of combinacao8 onto the stack
+		lea  si, combinacao8
+		push si
+		; Call the compare_arrays subroutine
+		call compare_arrays_9_O
 
-; 		jmp  	MUDA_JOGADOR
+		jmp  	MUDA_JOGADOR
 
-; compare_arrays_9_O:
-; 		; Retrieve the combination array from the stack
-; 		pop si
+compare_arrays_9_O:
+		; Retrieve the combination array from the stack
+		pop si
 
-; 		; Calculate the size of the arrays
-; 		mov cx, 9  ; Number of elements in the arrays
+		; Calculate the size of the arrays
+		mov cx, 9  ; Number of elements in the arrays
 
-; 		; Point to the start of the arrays
-; 		lea bp, tabuleiro9_O
+		; Point to the start of the arrays
+		lea bp, tabuleiro9_O
 
-; 		; Loop to compare elements
-; compare_loop_9_O:
-; 		; Compare the current elements
-; 		mov al, [si]
-; 		mov bl, [bp]
-; 		cmp al, bl
-; 		; cmp byte [si], [bp]
-; 		jne endComparacao_9_O
+		; Loop to compare elements
+compare_loop_9_O:
+		; Compare the current elements
+		mov al, [si]
+		mov bl, [bp]
+		cmp al, bl
+		; cmp byte [si], [bp]
+		jne endComparacao_9_O
 
-; 		; Move to the next element
-; 		inc si
-; 		inc bp
+		; Move to the next element
+		inc si
+		inc bp
 
-; 		; Decrement the loop counter
-; 		loop compare_loop_9_O
+		; Decrement the loop counter
+		loop compare_loop_9_O
 
-; 		mov  al, 1              ; Move the value 1 into the AL register
-; 		mov  si, 8
-; 		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro9_O
-; 		; jmp     PROCURA_VITORIA_TOTAL
-; 		; jmp     MOSTRA_VITORIA_TAB
-; 		jmp  	MUDA_JOGADOR
-; 		ret
+		mov  al, 1              ; Move the value 1 into the AL register
+		mov  si, 8
+		mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro9_O
+		; jmp     PROCURA_VITORIA_TOTAL
+		; jmp     MOSTRA_VITORIA_TAB
+		jmp  	MUDA_JOGADOR
+		ret
 
-; ;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-; endComparacao_9_O:
-; 			ret
+;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
+endComparacao_9_O:
+			ret
 MUDA_JOGADOR:
 			mov     al, num_jogadas
 			cmp     al, 0
