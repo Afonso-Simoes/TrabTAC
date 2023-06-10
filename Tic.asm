@@ -284,13 +284,6 @@ LER_SETA:
 			je   	MOSTRA_JOGADA_TESTES
 			; je   	MOSTRA_JOGADA	
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
-			; mov		CL, Car
-			; cmp		CL, 32		; S� escreve se for espa�o em branco
-			; JNE 	LER_SETA
-			; mov		ah, 02h		; coloca o caracter lido no ecra
-			; mov		dl, al
-			; int		21H	
-			; goto_xy	POSx,POSy
 			
 			jmp		LER_SETA
 
@@ -478,10 +471,10 @@ MOSTRA_JOGADA_TESTES:
 			mov		CL, Car
 			cmp		CL, 32		; S� escreve se for espa�o em branco
 			JNE     CICLO
-			mov		ah, 02h		; coloca o caracter lido no ecra
+			mov		ah, 02h				; coloca o caracter lido no ecra
 			mov		dl, [JogadorAtual]
-			jmp     MUDA_JOGADOR
 			int		21H	
+			jmp     MUDA_JOGADOR
 
 MOSTRA_JOGADA:
 			goto_xy	POSx, POSy
