@@ -917,182 +917,468 @@ ATUALIZA_ARRAY_TAB_1_ESPACO_9_O:
 			mov  [tabuleiro1_O+si], al ; Move the value from AL into the memory location tabuleiro1_X
 			jmp  PROCURA_VITORIA_TAB_1_FIM_O
 PROCURA_VITORIA_TAB_1_FIM_X:
-		jmp     MUDA_JOGADOR
-		
-; 		; Procurar vitoria no Tabuleiro 1
-; 		; Push the address of combinacao1 onto the stack
-; 		lea  si, combinacao1
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_X
+		; jmp     MUDA_JOGADOR
+		jmp		PROCURA_VITORIA_TAB_1_COMB_1_FIM_X
+PROCURA_VITORIA_TAB_1_COMB_1_FIM_X:		
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_X
+		lea     si, combinacao1
+	compare_loop_1_comb_1_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_1_X
+			cmp al, ah
+			jne endComparacao_1_comb_1_X
+		comparacao_nao_interessa_1_comb_1_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-; 		; Push the address of combinacao2 onto the stack
-; 		lea  si, combinacao2
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_X
+			; Decrement the loop counter
+			loop compare_loop_1_comb_1_X
 
-; 		; Push the address of combinacao3 onto the stack
-; 		lea  si, combinacao3
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_X], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_1_X:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_2_FIM_X
+PROCURA_VITORIA_TAB_1_COMB_2_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_X
+		lea     si, combinacao2
+	compare_loop_1_comb_2_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_2_X
+			cmp al, ah
+			jne endComparacao_1_comb_2_X
+		comparacao_nao_interessa_1_comb_2_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-; 		; Push the address of combinacao4 onto the stack
-; 		lea  si, combinacao4
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_X
+			; Decrement the loop counter
+			loop compare_loop_1_comb_2_X
 
-; 		; Push the address of combinacao5 onto the stack
-; 		lea  si, combinacao5
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_X], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_2_X:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_3_FIM_X
+PROCURA_VITORIA_TAB_1_COMB_3_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_X
+		lea     si, combinacao3
+	compare_loop_1_comb_3_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_3_X
+			cmp al, ah
+			jne endComparacao_1_comb_3_X
+		comparacao_nao_interessa_1_comb_3_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-; 		; Push the address of combinacao6 onto the stack
-; 		lea  si, combinacao6
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_X
+			; Decrement the loop counter
+			loop compare_loop_1_comb_3_X
 
-; 		; Push the address of combinacao7 onto the stack
-; 		lea  si, combinacao7
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_X], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_3_X:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_4_FIM_X
+PROCURA_VITORIA_TAB_1_COMB_4_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_X
+		lea     si, combinacao4
+	compare_loop_1_comb_4_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_4_X
+			cmp al, ah
+			jne endComparacao_1_comb_4_X
+		comparacao_nao_interessa_1_comb_4_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-; 		; Push the address of combinacao8 onto the stack
-; 		lea  si, combinacao8
-; 		push si
-; 		; Call the compare_arrays subroutine
-; 		call compare_arrays_1_X
+			; Decrement the loop counter
+			loop compare_loop_1_comb_4_X
 
-; 		jmp  	MUDA_JOGADOR
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_X], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_4_X:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_5_FIM_X
+PROCURA_VITORIA_TAB_1_COMB_5_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_X
+		lea     si, combinacao5
+	compare_loop_1_comb_5_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_5_X
+			cmp al, ah
+			jne endComparacao_1_comb_5_X
+		comparacao_nao_interessa_1_comb_5_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-; compare_arrays_1_X:
-; 		; Retrieve the combination array from the stack
-; 		pop si
+			; Decrement the loop counter
+			loop compare_loop_1_comb_5_X
 
-; 		; Calculate the size of the arrays
-; 		mov cx, 9  ; Number of elements in the arrays
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_X], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_5_X:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_6_FIM_X
+PROCURA_VITORIA_TAB_1_COMB_6_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_X
+		lea     si, combinacao6
+	compare_loop_1_comb_6_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_6_X
+			cmp al, ah
+			jne endComparacao_1_comb_6_X
+		comparacao_nao_interessa_1_comb_6_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-; 		; Point to the start of the arrays
-; 		lea bp, tabuleiro1_X
+			; Decrement the loop counter
+			loop compare_loop_1_comb_6_X
 
-; 		; Loop to compare elements
-; compare_loop_1_X:
-; 		; Compare the current elements
-; 		mov al, [si]
-; 		mov bl, [bp]
-; 		cmp al, bl
-; 		; cmp byte [si], [bp]
-; 		jne endComparacao_1_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_X], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_6_X:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_7_FIM_X
+PROCURA_VITORIA_TAB_1_COMB_7_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_X
+		lea     si, combinacao7
+	compare_loop_1_comb_7_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_7_X
+			cmp al, ah
+			jne endComparacao_1_comb_7_X
+		comparacao_nao_interessa_1_comb_7_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-; 		; Move to the next element
-; 		inc si
-; 		inc bp
+			; Decrement the loop counter
+			loop compare_loop_1_comb_7_X
 
-; 		; Decrement the loop counter
-; 		loop compare_loop_1_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_X], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_7_X:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_8_FIM_X
+PROCURA_VITORIA_TAB_1_COMB_8_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_X
+		lea     si, combinacao8
+	compare_loop_1_comb_8_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_8_X
+			cmp al, ah
+			jne endComparacao_1_comb_8_X
+		comparacao_nao_interessa_1_comb_8_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-; 		mov  al, 1              ; Move the value 1 into the AL register
-; 		mov  [Vitorias_X], al ; Move the value from AL into the memory location tabuleiro1_X
-; 		; jmp     PROCURA_VITORIA_TOTAL~
-; 		jmp  	MUDA_JOGADOR
-; 		ret
+			; Decrement the loop counter
+			loop compare_loop_1_comb_8_X
 
-; 		;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-; endComparacao_1_X:
-; 		ret
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_X], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_8_X:
+			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_1_FIM_O:
-		jmp     MUDA_JOGADOR
-		; Procurar vitoria no Tabuleiro 1
-		; Push the address of combinacao1 onto the stack
-		lea  si, combinacao1
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_1_O
+		; jmp     MUDA_JOGADOR
+		jmp		PROCURA_VITORIA_TAB_1_COMB_1_FIM_O
+PROCURA_VITORIA_TAB_1_COMB_1_FIM_O:		
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_O
+		lea     si, combinacao1
+	compare_loop_1_comb_1_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_1_O
+			cmp al, ah
+			jne endComparacao_1_comb_1_O
+		comparacao_nao_interessa_1_comb_1_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Push the address of combinacao2 onto the stack
-		lea  si, combinacao2
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_1_O
+			; Decrement the loop counter
+			loop compare_loop_1_comb_1_O
 
-		; Push the address of combinacao3 onto the stack
-		lea  si, combinacao3
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_1_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_1_O:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_2_FIM_O
+PROCURA_VITORIA_TAB_1_COMB_2_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_O
+		lea     si, combinacao2
+	compare_loop_1_comb_2_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_2_O
+			cmp al, ah
+			jne endComparacao_1_comb_2_O
+		comparacao_nao_interessa_1_comb_2_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Push the address of combinacao4 onto the stack
-		lea  si, combinacao4
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_1_O
+			; Decrement the loop counter
+			loop compare_loop_1_comb_2_O
 
-		; Push the address of combinacao5 onto the stack
-		lea  si, combinacao5
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_1_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_2_O:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_3_FIM_O
+PROCURA_VITORIA_TAB_1_COMB_3_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_O
+		lea     si, combinacao3
+	compare_loop_1_comb_3_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_3_O
+			cmp al, ah
+			jne endComparacao_1_comb_3_O
+		comparacao_nao_interessa_1_comb_3_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Push the address of combinacao6 onto the stack
-		lea  si, combinacao6
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_1_O
+			; Decrement the loop counter
+			loop compare_loop_1_comb_3_O
 
-		; Push the address of combinacao7 onto the stack
-		lea  si, combinacao7
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_1_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_3_O:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_4_FIM_O
+PROCURA_VITORIA_TAB_1_COMB_4_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_O
+		lea     si, combinacao4
+	compare_loop_1_comb_4_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_4_O
+			cmp al, ah
+			jne endComparacao_1_comb_4_O
+		comparacao_nao_interessa_1_comb_4_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Push the address of combinacao8 onto the stack
-		lea  si, combinacao8
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_1_O
+			; Decrement the loop counter
+			loop compare_loop_1_comb_4_O
 
-		jmp   MUDA_JOGADOR
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_4_O:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_5_FIM_O
+PROCURA_VITORIA_TAB_1_COMB_5_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_O
+		lea     si, combinacao5
+	compare_loop_1_comb_5_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_5_O
+			cmp al, ah
+			jne endComparacao_1_comb_5_O
+		comparacao_nao_interessa_1_comb_5_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-compare_arrays_1_O:
-		; Retrieve the combination array from the stack
-		pop si
+			; Decrement the loop counter
+			loop compare_loop_1_comb_5_O
 
-		; Calculate the size of the arrays
-		mov cx, 9  ; Number of elements in the arrays
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_5_O:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_6_FIM_O
+PROCURA_VITORIA_TAB_1_COMB_6_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_O
+		lea     si, combinacao6
+	compare_loop_1_comb_6_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_6_O
+			cmp al, ah
+			jne endComparacao_1_comb_6_O
+		comparacao_nao_interessa_1_comb_6_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Point to the start of the arrays
-		lea bp, tabuleiro1_O
+			; Decrement the loop counter
+			loop compare_loop_1_comb_6_O
 
-		; Loop to compare elements
-compare_loop_1_O:
-    	; Compare the current elements
-		mov al, [si]
-		mov bl, [bp]
-		cmp al, bl
-		jne endComparacao_1_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_6_O:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_7_FIM_O
+PROCURA_VITORIA_TAB_1_COMB_7_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_O
+		lea     si, combinacao7
+	compare_loop_1_comb_7_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_7_O
+			cmp al, ah
+			jne endComparacao_1_comb_7_O
+		comparacao_nao_interessa_1_comb_7_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Move to the next element
-		inc si
-		inc bp
+			; Decrement the loop counter
+			loop compare_loop_1_comb_7_O
 
-		; Decrement the loop counter
-		loop compare_loop_1_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_7_O:
+			jmp		PROCURA_VITORIA_TAB_1_COMB_8_FIM_O
+PROCURA_VITORIA_TAB_1_COMB_8_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro1_O
+		lea     si, combinacao8
+	compare_loop_1_comb_8_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_1_comb_8_O
+			cmp al, ah
+			jne endComparacao_1_comb_8_O
+		comparacao_nao_interessa_1_comb_8_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-		mov  al, 1              ; Move the value 1 into the AL register
-		mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
-		jmp   MUDA_JOGADOR
-		ret
+			; Decrement the loop counter
+			loop compare_loop_1_comb_8_O
 
-;SE CHEGAR A ESTE PONTO E PORQUE FOI DETECTADA UMA VITORIA NO TABULEIRO
-endComparacao_1_O:
-    	ret
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  [Vitorias_O], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_1
+	endComparacao_1_comb_8_O:
+			jmp		MUDA_JOGADOR
 
+MOSTRA_VITORIAS_MAIN_1:
+		goto_xy 	55, 6	
+		mov		CL, Car
+		cmp		CL, 32		; S� escreve se for espa�o em branco
+		JNE     MUDA_JOGADOR
+		mov		ah, 02h				; coloca o caracter lido no ecra
+		mov		dl, [JogadorAtual]
+		int		21H	
+		jmp 	MUDA_JOGADOR
 
 ;############################################### TODA A LOGICA DO TABULEIRO 2 ###############################
 
@@ -1359,184 +1645,484 @@ ATUALIZA_ARRAY_TAB_2_ESPACO_9_O:
 			jmp  PROCURA_VITORIA_TAB_2_FIM_O
 
 PROCURA_VITORIA_TAB_2_FIM_X:
-		jmp     MUDA_JOGADOR
-		; Procurar vitoria no Tabuleiro 2
-		; Push the address of combinacao1 onto the stack
-		lea  si, combinacao1
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_2_X
+		; jmp     MUDA_JOGADOR
+		jmp		PROCURA_VITORIA_TAB_2_COMB_1_FIM_X
+PROCURA_VITORIA_TAB_2_COMB_1_FIM_X:		
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_X
+		lea     si, combinacao1
+	compare_loop_2_comb_1_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_1_X
+			cmp al, ah
+			jne endComparacao_2_comb_1_X
+		comparacao_nao_interessa_2_comb_1_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Push the address of combinacao2 onto the stack
-		lea  si, combinacao2
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_2_X
+			; Decrement the loop counter
+			loop compare_loop_2_comb_1_X
 
-		; Push the address of combinacao3 onto the stack
-		lea  si, combinacao3
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_2_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_X+si], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_1_X:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_2_FIM_X
+PROCURA_VITORIA_TAB_2_COMB_2_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_X
+		lea     si, combinacao2
+	compare_loop_2_comb_2_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_2_X
+			cmp al, ah
+			jne endComparacao_2_comb_2_X
+		comparacao_nao_interessa_2_comb_2_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Push the address of combinacao4 onto the stack
-		lea  si, combinacao4
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_2_X
+			; Decrement the loop counter
+			loop compare_loop_2_comb_2_X
 
-		; Push the address of combinacao5 onto the stack
-		lea  si, combinacao5
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_2_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_X+si], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_2_X:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_3_FIM_X
+PROCURA_VITORIA_TAB_2_COMB_3_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_X
+		lea     si, combinacao3
+	compare_loop_2_comb_3_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_3_X
+			cmp al, ah
+			jne endComparacao_2_comb_3_X
+		comparacao_nao_interessa_2_comb_3_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Push the address of combinacao6 onto the stack
-		lea  si, combinacao6
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_2_X
+			; Decrement the loop counter
+			loop compare_loop_2_comb_3_X
 
-		; Push the address of combinacao7 onto the stack
-		lea  si, combinacao7
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_2_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_X+si], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_3_X:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_4_FIM_X
+PROCURA_VITORIA_TAB_2_COMB_4_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_X
+		lea     si, combinacao4
+	compare_loop_2_comb_4_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_4_X
+			cmp al, ah
+			jne endComparacao_2_comb_4_X
+		comparacao_nao_interessa_2_comb_4_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Push the address of combinacao8 onto the stack
-		lea  si, combinacao8
-		push si
-		; Call the compare_arrays subroutine
-		call compare_arrays_2_X
+			; Decrement the loop counter
+			loop compare_loop_2_comb_4_X
 
-		jmp  	MUDA_JOGADOR
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_X+si], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_4_X:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_5_FIM_X
+PROCURA_VITORIA_TAB_2_COMB_5_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_X
+		lea     si, combinacao5
+	compare_loop_2_comb_5_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_5_X
+			cmp al, ah
+			jne endComparacao_2_comb_5_X
+		comparacao_nao_interessa_2_comb_5_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-compare_arrays_2_X:
-		; Retrieve the combination array from the stack
-		pop si
+			; Decrement the loop counter
+			loop compare_loop_2_comb_5_X
 
-		; Calculate the size of the arrays
-		mov cx, 9  ; Number of elements in the arrays
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_X+si], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_5_X:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_6_FIM_X
+PROCURA_VITORIA_TAB_2_COMB_6_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_X
+		lea     si, combinacao6
+	compare_loop_2_comb_6_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_6_X
+			cmp al, ah
+			jne endComparacao_2_comb_6_X
+		comparacao_nao_interessa_2_comb_6_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Point to the start of the arrays
-		lea bp, tabuleiro2_X
+			; Decrement the loop counter
+			loop compare_loop_2_comb_6_X
 
-		; Loop to compare elements
-compare_loop_2_X:
-		; Compare the current elements
-		mov al, [si]
-		mov bl, [bp]
-		cmp al, bl
-		; cmp byte [si], [bp]
-		jne endComparacao_2_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_X+si], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_6_X:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_7_FIM_X
+PROCURA_VITORIA_TAB_2_COMB_7_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_X
+		lea     si, combinacao7
+	compare_loop_2_comb_7_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_7_X
+			cmp al, ah
+			jne endComparacao_2_comb_7_X
+		comparacao_nao_interessa_2_comb_7_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-		; Move to the next element
-		inc si
-		inc bp
+			; Decrement the loop counter
+			loop compare_loop_2_comb_7_X
 
-		; Decrement the loop counter
-		loop compare_loop_2_X
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_X+si], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_7_X:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_8_FIM_X
+PROCURA_VITORIA_TAB_2_COMB_8_FIM_X:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_X
+		lea     si, combinacao8
+	compare_loop_2_comb_8_X:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_8_X
+			cmp al, ah
+			jne endComparacao_2_comb_8_X
+		comparacao_nao_interessa_2_comb_8_X:
+			; Move to the next element
+			inc si
+			inc bx
 
-		mov  al, 1              ; Move the value 1 into the AL register
-		mov  si, 1
-		mov  [Vitorias_X+si], al ; Move the value from AL into the memory location tabuleiro2_X
-		; jmp     PROCURA_VITORIA_TOTAL~
-		jmp  	MUDA_JOGADOR
-		ret
+			; Decrement the loop counter
+			loop compare_loop_2_comb_8_X
 
-;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-endComparacao_2_X:
-		ret
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_X+si], al   ; Move the value from AL into the memory location Vitorias_X
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_8_X:
+			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_2_FIM_O:
-		jmp     MUDA_JOGADOR
-			; Procurar vitoria no Tabuleiro 2
-			; Push the address of combinacao1 onto the stack
-			lea  si, combinacao1
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays_2_O
+		; jmp     MUDA_JOGADOR
+		jmp		PROCURA_VITORIA_TAB_2_COMB_1_FIM_O
+PROCURA_VITORIA_TAB_2_COMB_1_FIM_O:		
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_O
+		lea     si, combinacao1
+	compare_loop_2_comb_1_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_1_O
+			cmp al, ah
+			jne endComparacao_2_comb_1_O
+		comparacao_nao_interessa_2_comb_1_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-			; Push the address of combinacao2 onto the stack
-			lea  si, combinacao2
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays_2_O
+			; Decrement the loop counter
+			loop compare_loop_2_comb_1_O
 
-			; Push the address of combinacao3 onto the stack
-			lea  si, combinacao3
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays_2_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_1_O:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_2_FIM_O
+PROCURA_VITORIA_TAB_2_COMB_2_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_O
+		lea     si, combinacao2
+	compare_loop_2_comb_2_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_2_O
+			cmp al, ah
+			jne endComparacao_2_comb_2_O
+		comparacao_nao_interessa_2_comb_2_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-			; Push the address of combinacao4 onto the stack
-			lea  si, combinacao4
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays_2_O
+			; Decrement the loop counter
+			loop compare_loop_2_comb_2_O
 
-			; Push the address of combinacao5 onto the stack
-			lea  si, combinacao5
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays_2_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_2_O:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_3_FIM_O
+PROCURA_VITORIA_TAB_2_COMB_3_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_O
+		lea     si, combinacao3
+	compare_loop_2_comb_3_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_3_O
+			cmp al, ah
+			jne endComparacao_2_comb_3_O
+		comparacao_nao_interessa_2_comb_3_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-			; Push the address of combinacao6 onto the stack
-			lea  si, combinacao6
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays_2_O
+			; Decrement the loop counter
+			loop compare_loop_2_comb_3_O
 
-			; Push the address of combinacao7 onto the stack
-			lea  si, combinacao7
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays_2_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_3_O:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_4_FIM_O
+PROCURA_VITORIA_TAB_2_COMB_4_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_O
+		lea     si, combinacao4
+	compare_loop_2_comb_4_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_4_O
+			cmp al, ah
+			jne endComparacao_2_comb_4_O
+		comparacao_nao_interessa_2_comb_4_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-			; Push the address of combinacao8 onto the stack
-			lea  si, combinacao8
-			push si
-			; Call the compare_arrays subroutine
-			call compare_arrays_2_O
+			; Decrement the loop counter
+			loop compare_loop_2_comb_4_O
 
-			jmp  	MUDA_JOGADOR
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_4_O:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_5_FIM_O
+PROCURA_VITORIA_TAB_2_COMB_5_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_O
+		lea     si, combinacao5
+	compare_loop_2_comb_5_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_5_O
+			cmp al, ah
+			jne endComparacao_2_comb_5_O
+		comparacao_nao_interessa_2_comb_5_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-			compare_arrays_2_O:
-					; Retrieve the combination array from the stack
-					pop si
+			; Decrement the loop counter
+			loop compare_loop_2_comb_5_O
 
-					; Calculate the size of the arrays
-					mov cx, 9  ; Number of elements in the arrays
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_5_O:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_6_FIM_O
+PROCURA_VITORIA_TAB_2_COMB_6_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_O
+		lea     si, combinacao6
+	compare_loop_2_comb_6_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_6_O
+			cmp al, ah
+			jne endComparacao_2_comb_6_O
+		comparacao_nao_interessa_2_comb_6_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-					; Point to the start of the arrays
-					lea bp, tabuleiro2_O
+			; Decrement the loop counter
+			loop compare_loop_2_comb_6_O
 
-					; Loop to compare elements
-				compare_loop_2_O:
-						; Compare the current elements
-						mov al, [si]
-						mov bl, [bp]
-						cmp al, bl
-						; cmp byte [si], [bp]
-						jne endComparacao_2_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_6_O:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_7_FIM_O
+PROCURA_VITORIA_TAB_2_COMB_7_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_O
+		lea     si, combinacao7
+	compare_loop_2_comb_7_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_7_O
+			cmp al, ah
+			jne endComparacao_2_comb_7_O
+		comparacao_nao_interessa_2_comb_7_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-						; Move to the next element
-						inc si
-						inc bp
+			; Decrement the loop counter
+			loop compare_loop_2_comb_7_O
 
-						; Decrement the loop counter
-						loop compare_loop_2_O
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_7_O:
+			jmp		PROCURA_VITORIA_TAB_2_COMB_8_FIM_O
+PROCURA_VITORIA_TAB_2_COMB_8_FIM_O:
+		; jmp     MUDA_JOGADOR
+		mov 	cx, 9
+		lea 	bx, tabuleiro2_O
+		lea     si, combinacao8
+	compare_loop_2_comb_8_O:
+			; Compare the current elements
+			mov al, [si]
+			mov ah, [bx]
+			cmp al, 1
+			jne comparacao_nao_interessa_2_comb_8_O
+			cmp al, ah
+			jne endComparacao_2_comb_8_O
+		comparacao_nao_interessa_2_comb_8_O:
+			; Move to the next element
+			inc si
+			inc bx
 
-					mov  al, 1              ; Move the value 1 into the AL register
-					mov  si, 1
-					mov  [Vitorias_O+si], al ; Move the value from AL into the memory location tabuleiro2_O
-					; jmp     PROCURA_VITORIA_TOTAL
-					jmp  	MUDA_JOGADOR
-					ret
+			; Decrement the loop counter
+			loop compare_loop_2_comb_8_O
 
-			;SE CHEGAR A ESTE PONTO E PORQUE FOI DTETADA UMA VITORIA NO TABULEIRO
-			endComparacao_2_O:
-					ret
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			; jmp   MUDA_JOGADOR
+			jmp 	MOSTRA_VITORIAS_MAIN_2
+	endComparacao_2_comb_8_O:
+			jmp		MUDA_JOGADOR
+
+MOSTRA_VITORIAS_MAIN_2:
+		goto_xy 	57, 6	
+		mov		CL, Car
+		cmp		CL, 32		; S� escreve se for espa�o em branco
+		JNE     MUDA_JOGADOR
+		mov		ah, 02h				; coloca o caracter lido no ecra
+		mov		dl, [JogadorAtual]
+		int		21H	
+		jmp 	MUDA_JOGADOR
 
 ;############################################### TODA A LOGICA DO TABULEIRO 3 ###############################
 
