@@ -21,6 +21,7 @@ dseg	segment para public 'data'
         Erro_Close      db      'Erro ao tentar fechar o ficheiro$'
         Fich         	db      'jogo.TXT',0
 		Fich_nomes		db		'nomes.TXT',0
+		Fich_final 		db 		'winner.TXT',0
 		Player1_nome	db		'???????????????????????????$'
 		PLayer2_nome	db		'???????????????????????????$'
 		Player1			db		'X'
@@ -29,6 +30,9 @@ dseg	segment para public 'data'
 		Simbolo2		db      'O'
 		JogadorAtual    db      'X'
 		JogadorAtual_Cor    db     1h
+		JogoTerminado 	db 		?       ;0 Empate            1 Vitoria
+		Winner          db 		?
+		Winner_nome     db 		'???????????????????????????$'
         HandleFich      dw      0
 		Menu_nomes		db		0		;0 Ainda não foi escrito o nome do primeiro jogador
 										;1 Já foi escrito o nome do primeiro mas não o do segundo
@@ -688,7 +692,7 @@ MUDA_JOGADOR_PARA_X:
 	fim_do_loop_O:
 
 			cmp 	dh, 9
-			jae     PROCURA_VITORIA_TOTAL
+			jae     PREPARA_FIM_DO_JOGO_EMPATE
 			mov 	bh, 0
 			dec     num_jogadas
 			inc     bl
@@ -771,7 +775,7 @@ MUDA_JOGADOR_PARA_O:
 	fim_do_loop_X:
 
 			cmp 	dh, 9
-			jae     PROCURA_VITORIA_TOTAL
+			jae     PREPARA_FIM_DO_JOGO_EMPATE
 			mov   	bh, 0
 			dec     num_jogadas
 			inc     bl
@@ -8174,12 +8178,42 @@ PROCURA_VITORIA_TOTAL_COMB_8_O:
 
 
 PREPARA_FIM_DO_JOGO_VITORIA:
+			xor 	si, si
+			mov 	al, 1
+			mov     [JogoTerminado], al
+			mov 	al, [JogadorAtual]				;Aqui esta estranho mas tem que ser assim
+			cmp 	al, 'O'
+			je 		VENCEDOR_O
+			cmp 	al, 'X'
+			je 		VENCEDOR_X
 
 			; jmp		MUDA_JOGADOR
 			jmp 	fim
 
-PREPARA_FIM_DO_JOGO_EMPATE:
+VENCEDOR_X:
+			mov 	[Winner], 'X'
+	ciclo_copia_nome_X:
+			cmp     si, 27
+			je      fim
+			mov 	al, [Player1_nome+si]
+			mov     byte ptr [Winner_nome+si], al
+			inc     si
+			jmp     ciclo_copia_nome_X
+			jmp 	fim
+VENCEDOR_O:
+			mov 	[Winner], 'O'
+	ciclo_copia_nome_O:
+			cmp     si, 27
+			je      fim
+			mov 	al, [Player2_nome+si]
+			mov     byte ptr [Winner_nome+si], al
+			inc     si
+			jmp     ciclo_copia_nome_O
+			jmp 	fim
 
+PREPARA_FIM_DO_JOGO_EMPATE:
+			mov 	al, 0
+			mov     [JogoTerminado], al
 			; jmp		MUDA_JOGADOR
 			jmp 	fim
 
@@ -8416,57 +8450,152 @@ JOGADOR2:
 fim:
 	RET
 IMP_NOMES_JOGO endp
-; ##################################################################
-ATRIBUI_SIMBOLO PROC
-					jmp		fim
-
-
-fim:
-	RET
-ATRIBUI_SIMBOLO endp
-
-; ####################################################################
-; CalcAleat proc near
-
-; 	sub	sp,2
-; 	push	bp
-; 	mov	bp,sp
-; 	push	ax
-; 	push	cx
-; 	push	dx	
-; 	mov	ax,[bp+4]
-; 	mov	[bp+2],ax
-
-; 	mov	ah,00h
-; 	int	1ah
-
-; 	add	dx,ultimo_num_aleat
-; 	add	cx,dx	
-; 	mov	ax,65521
-; 	push	dx
-; 	mul	cx
-; 	pop	dx
-; 	xchg	dl,dh
-; 	add	dx,32749
-; 	add	dx,ax
-
-; 	mov	ultimo_num_aleat,dx
-
-; 	mov	[BP+4],dx
-
-; 	pop	dx
-; 	pop	cx
-; 	pop	ax
-; 	pop	bp
-; 	ret
-; CalcAleat endp
-; #######################################################################
+; ########################################################################################
 MOSTRA_FINAL PROC
-		;MOSTRAR O VENCEDOR OU O EMPATE
+
+		;abre ficheiro
+        mov     ah,3dh		; Open File function
+        mov     al,0		; Open for reading only
+        lea     dx,Fich_final		; Load the address of the filename
+        int     21h			; Trigger DOS interrupt 21h
+        jc      erro_abrir		; Jump to error handler if CF (Carry Flag) is set
+        mov     HandleFich,ax		; Store the file handle
+        jmp     ler_ciclo_final		; Jump to the reading loop
+
+erro_abrir:
+        mov     ah,09h		; Print String function
+        lea     dx,Erro_Open	; Load the address of the error message
+        int     21h				; Trigger DOS interrupt 21h
+        jmp     fim		 ; Jump to the end of the procedure
+
+ler_ciclo_final:
+		; Read the file character by character
+		mov     ah,3fh		; Read File function
+        mov     bx,HandleFich	; File handle
+        mov     cx,1		; Number of bytes to read (1 character)
+        lea     dx,car_fich		; Buffer to store the read character
+        int     21h			; Trigger DOS interrupt 21h
+		jc		erro_ler		; Jump to error handler if CF is set
+		cmp		ax,0		;EOF(end of file)?	; Check if the read operation reached EOF
+		je		fecha_ficheiro	; Jump to close the file if AX is zero (EOF reached)
+        
+		; Print the character read from the file
+		mov     ah,02h		; Print Character function
+		mov		dl,car_fich		; Character to be printed
+		int		21h			; Trigger DOS interrupt 21h
+		jmp		ler_ciclo_final		; Continue looping to read the next character
+
+erro_ler:
+        mov     ah,09h		; Print String function
+        lea     dx,Erro_Ler_Msg		; Load the address of the error message
+        int     21h			; Trigger DOS interrupt 21h
+
+fecha_ficheiro:
+		; Close the file
+        mov     ah,3eh			 ; Close File function
+        mov     bx,HandleFich		; File handle
+        int     21h				; Trigger DOS interrupt 21h
+        jnc     fim			; Jump to the end of the procedure if CF is not set
+
+        mov     ah,09h			; Print String function
+        lea     dx,Erro_Close		; Load the address of the error message
+        Int     21h			 ; Trigger DOS interrupt 21h
 
 fim:
 	RET
 MOSTRA_FINAL endp
+; ######################################################################
+MOSTRA_RESULTADO PROC
+			mov 	al, [JogoTerminado]
+			cmp 	al, 0
+			je 		ESCREVE_EMPATE
+			cmp 	al, 1
+			je 		ESCREVE_VENCEDOR
+			jmp 	fim
+ESCREVE_VENCEDOR:
+		mov     POSx, 31
+		mov     POSy, 2
+		goto_xy POSx, POSy
+		mov dl, 'V'            ; Print 'X' character
+		mov ah, 02h            ; Set the function to display a character
+		int 21h                ; Call interrupt 21h to print the character
+		inc POSx
+
+		mov dl, 'E'
+		int 21h
+		inc POSx
+
+		mov dl, 'N'
+		int 21h
+		inc POSx
+
+		mov dl, 'C'
+		int 21h
+		inc POSx
+
+		mov dl, 'E'
+		int 21h
+		inc POSx
+
+		mov dl, 'D'
+		int 21h
+		inc POSx
+
+		mov dl, 'O'
+		int 21h
+		inc POSx
+
+		mov dl, 'R'
+		int 21h
+		jmp ESCREVE_VENCEDOR_NOME
+ESCREVE_VENCEDOR_NOME:
+		mov 	POSx, 22
+		mov 	POSy, 6
+		goto_xy POSx, POSy
+		lea dx, Winner_nome   		; Load the address of the 'Player1_nome' string into the DX register
+		mov ah, 09h            					; Set the function to display a string
+		int 21h                					; Call interrupt 21h to print the string
+		jmp ESCREVE_VENCEDOR_SIMBOLO
+
+ESCREVE_VENCEDOR_SIMBOLO:
+		mov     POSx, 34
+		mov     POSy, 8
+		goto_xy POSx, POSy
+		mov dl, [Winner]
+		mov ah, 02h            ; Set the function to display a character
+		int 21h                ; Call interrupt 21h to print the character
+		jmp fim
+ESCREVE_EMPATE:
+		mov     POSx, 32
+		mov     POSy, 2
+		goto_xy POSx, POSy
+		mov dl, 'E'            ; Print 'X' character
+		mov ah, 02h            ; Set the function to display a character
+		int 21h                ; Call interrupt 21h to print the character
+		inc POSx
+
+		mov dl, 'M'
+		int 21h
+		inc POSx
+
+		mov dl, 'P'
+		int 21h
+		inc POSx
+
+		mov dl, 'A'
+		int 21h
+		inc POSx
+
+		mov dl, 'T'
+		int 21h
+		inc POSx
+
+		mov dl, 'E'
+		int 21h
+		jmp fim
+fim:
+	RET
+MOSTRA_RESULTADO endp
 ;########################################################################
 Main  proc
 		mov			ax, dseg
@@ -8486,7 +8615,10 @@ Main  proc
 		call		IMP_FICH		;Abre o ficheiro de texto e imprime
 		call        IMP_NOMES_JOGO		;Escreve o nome dos jogadores e os seus simbolos
 		call 		AVATAR
-		; call        MOSTRA_FINAL
+		call		apaga_ecran
+		goto_xy		0,0				;Mudar as coordenadas de inicio
+		call        MOSTRA_FINAL
+		call 		MOSTRA_RESULTADO         ;Vai mostrar o nome do jogador vencedor ou dizer empate
 		goto_xy		0,22
 		
 		mov			ah,4CH
