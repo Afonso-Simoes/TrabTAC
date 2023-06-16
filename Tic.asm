@@ -687,7 +687,7 @@ MUDA_JOGADOR_PARA_X:
 
 	fim_do_loop_O:
 
-			cmp 	dh, 8
+			cmp 	dh, 9
 			jae     PROCURA_VITORIA_TOTAL
 			mov 	bh, 0
 			dec     num_jogadas
@@ -770,7 +770,7 @@ MUDA_JOGADOR_PARA_O:
 
 	fim_do_loop_X:
 
-			cmp 	dh, 8
+			cmp 	dh, 9
 			jae     PROCURA_VITORIA_TOTAL
 			mov   	bh, 0
 			dec     num_jogadas
@@ -797,10 +797,6 @@ MUDA_JOGADOR_PARA_O:
 
 ;############################################ TODA A LOGICA DO TABULEIRO 1 #############################
 PROCURA_VITORIA_TAB_1_INICIO:
-			inc		contador1
-			mov 	al, contador1
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_1
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 4
@@ -1299,6 +1295,10 @@ PROCURA_VITORIA_TAB_1_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_1
 	endComparacao_1_comb_8_X:
+			inc		contador1
+			mov 	al, contador1
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_1
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_1_FIM_O:
@@ -1534,6 +1534,10 @@ PROCURA_VITORIA_TAB_1_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_1
 	endComparacao_1_comb_8_O:
+			inc		contador1
+			mov 	al, contador1
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_1
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_1:
@@ -1549,10 +1553,6 @@ MOSTRA_VITORIAS_MAIN_1:
 ;############################################### TODA A LOGICA DO TABULEIRO 2 ###############################
 
 PROCURA_VITORIA_TAB_2_INICIO:
-			inc		contador2
-			mov 	al, contador2
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_2
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 13
@@ -2060,6 +2060,10 @@ PROCURA_VITORIA_TAB_2_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_2
 	endComparacao_2_comb_8_X:
+			inc		contador2
+			mov 	al, contador2
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_2
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_2_FIM_O:
@@ -2303,6 +2307,10 @@ PROCURA_VITORIA_TAB_2_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_2
 	endComparacao_2_comb_8_O:
+			inc		contador2
+			mov 	al, contador2
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_2
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_2:
@@ -2318,10 +2326,6 @@ MOSTRA_VITORIAS_MAIN_2:
 ;############################################### TODA A LOGICA DO TABULEIRO 3 ###############################
 
 PROCURA_VITORIA_TAB_3_INICIO:
-			inc		contador3
-			mov 	al, contador3
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_3
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 22
@@ -2829,6 +2833,10 @@ PROCURA_VITORIA_TAB_3_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_3
 	endComparacao_3_comb_8_X:
+			inc		contador3
+			mov 	al, contador3
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_3
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_3_FIM_O:
@@ -3072,6 +3080,10 @@ PROCURA_VITORIA_TAB_3_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_3
 	endComparacao_3_comb_8_O:
+			inc		contador3
+			mov 	al, contador3
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_3
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_3:
@@ -3086,10 +3098,6 @@ MOSTRA_VITORIAS_MAIN_3:
 
 ;############################################ TODA A LOGICA DO TABULEIRO 4 #############################
 PROCURA_VITORIA_TAB_4_INICIO:
-			inc		contador4
-			mov 	al, contador4
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_4
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 4
@@ -3597,6 +3605,10 @@ PROCURA_VITORIA_TAB_4_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_4
 	endComparacao_4_comb_8_X:
+			inc		contador4
+			mov 	al, contador4
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_4
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_4_FIM_O:
@@ -3840,6 +3852,10 @@ PROCURA_VITORIA_TAB_4_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_4
 	endComparacao_4_comb_8_O:
+			inc		contador4
+			mov 	al, contador4
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_4
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_4:
@@ -3854,10 +3870,6 @@ MOSTRA_VITORIAS_MAIN_4:
 
 ;############################################ TODA A LOGICA DO TABULEIRO 5 #############################
 PROCURA_VITORIA_TAB_5_INICIO:
-			inc		contador5
-			mov 	al, contador5
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_5
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 13
@@ -4365,6 +4377,10 @@ PROCURA_VITORIA_TAB_5_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_5
 	endComparacao_5_comb_8_X:
+			inc		contador5
+			mov 	al, contador5
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_5
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_5_FIM_O:
@@ -4608,6 +4624,10 @@ PROCURA_VITORIA_TAB_5_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_5
 	endComparacao_5_comb_8_O:
+			inc		contador5
+			mov 	al, contador5
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_5
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_5:
@@ -4622,10 +4642,6 @@ MOSTRA_VITORIAS_MAIN_5:
 
 ;############################################ TODA A LOGICA DO TABULEIRO 6 #############################
 PROCURA_VITORIA_TAB_6_INICIO:
-			inc		contador6
-			mov 	al, contador6
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_6
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 22
@@ -5133,6 +5149,10 @@ PROCURA_VITORIA_TAB_6_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_6
 	endComparacao_6_comb_8_X:
+			inc		contador6
+			mov 	al, contador6
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_6
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_6_FIM_O:
@@ -5376,6 +5396,10 @@ PROCURA_VITORIA_TAB_6_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_6
 	endComparacao_6_comb_8_O:
+			inc		contador6
+			mov 	al, contador6
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_6
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_6:
@@ -5390,10 +5414,6 @@ MOSTRA_VITORIAS_MAIN_6:
 
 ;############################################ TODA A LOGICA DO TABULEIRO 7 #############################
 PROCURA_VITORIA_TAB_7_INICIO:
-			inc		contador7
-			mov 	al, contador7
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_7
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 4
@@ -5901,6 +5921,10 @@ PROCURA_VITORIA_TAB_7_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_7
 	endComparacao_7_comb_8_X:
+			inc		contador7
+			mov 	al, contador7
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_7
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_7_FIM_O:
@@ -6144,6 +6168,10 @@ PROCURA_VITORIA_TAB_7_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_7
 	endComparacao_7_comb_8_O:
+			inc		contador7
+			mov 	al, contador7
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_7
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_7:
@@ -6158,10 +6186,6 @@ MOSTRA_VITORIAS_MAIN_7:
 
 ;############################################ TODA A LOGICA DO TABULEIRO 8 #############################
 PROCURA_VITORIA_TAB_8_INICIO:
-			inc		contador8
-			mov 	al, contador8
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_8
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 13
@@ -6669,6 +6693,10 @@ PROCURA_VITORIA_TAB_8_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_8
 	endComparacao_8_comb_8_X:
+			inc		contador8
+			mov 	al, contador8
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_8
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_8_FIM_O:
@@ -6912,6 +6940,10 @@ PROCURA_VITORIA_TAB_8_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_8
 	endComparacao_8_comb_8_O:
+			inc		contador8
+			mov 	al, contador8
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_8
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_8:
@@ -6926,10 +6958,6 @@ MOSTRA_VITORIAS_MAIN_8:
 
 ;############################################ TODA A LOGICA DO TABULEIRO 9 #############################
 PROCURA_VITORIA_TAB_9_INICIO:
-			inc		contador9
-			mov 	al, contador9
-			cmp 	al, 8
-			je 		CONFIRMA_EMPATE_TAB_9
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 22
@@ -7437,6 +7465,10 @@ PROCURA_VITORIA_TAB_9_COMB_8_FIM_X:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_9
 	endComparacao_9_comb_8_X:
+			inc		contador9
+			mov 	al, contador9
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_9
 			jmp		MUDA_JOGADOR
 
 PROCURA_VITORIA_TAB_9_FIM_O:
@@ -7680,6 +7712,10 @@ PROCURA_VITORIA_TAB_9_COMB_8_FIM_O:
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_9
 	endComparacao_9_comb_8_O:
+			inc		contador9
+			mov 	al, contador9
+			cmp 	al, 9
+			je 		CONFIRMA_EMPATE_TAB_9
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_9:
