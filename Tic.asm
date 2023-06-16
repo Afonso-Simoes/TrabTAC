@@ -28,6 +28,7 @@ dseg	segment para public 'data'
 		Simbolo1		db      'X'
 		Simbolo2		db      'O'
 		JogadorAtual    db      'X'
+		JogadorAtual_Cor    db     1h
         HandleFich      dw      0
 		Menu_nomes		db		0		;0 Ainda não foi escrito o nome do primeiro jogador
 										;1 Já foi escrito o nome do primeiro mas não o do segundo
@@ -42,7 +43,7 @@ dseg	segment para public 'data'
 		car_fich        db      ?
 
 		ultimo_num_aleat dw 	0
-		num_jogadas     db      80
+		num_jogadas     db      79
 
 		combinacao1     db      1, 1, 1, ?, ?, ?, ?, ?, ?
 		combinacao2     db      ?, ?, ?, 1, 1, 1, ?, ?, ?						;#############
@@ -73,9 +74,21 @@ dseg	segment para public 'data'
 		tabuleiro8_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
 		tabuleiro9_O      db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
 
+		contador1 		db 		0
+		contador2 		db 		0
+		contador3 		db 		0
+		contador4 		db 		0
+		contador5 		db 		0
+		contador6 		db 		0
+		contador7 		db 		0
+		contador8 		db 		0
+		contador9 		db 		0
+
 		Vitorias_X        db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
 		Vitorias_O        db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
 		Vitorias_Gerais   db      ?, ?, ?, ?, ?, ?, ?, ?, ?     ;9 dup(?)
+		contador_gerais   db     0
+		Empate_geral 	db 		0
 
 		jogoAtual       db      5                            ;Varia de 1 a 9 e é a referencia a cada tabuleiro
 		proximoTab      db      ?
@@ -293,7 +306,6 @@ LER_SETA_NOMES:
 			goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			CMP     AL, 48		; Compara para ver se apaga usando o '0'
 			JE		DELETE
-			; goto_xy	POSx,POSy 	; verifica se pode escrever o caracter no ecran
 			mov		CL, Car
 			cmp 	CL, "#"
 			je		BLOQUEIA_MOVIMENTO_NOMES
@@ -509,19 +521,39 @@ MOSTRA_JOGADA:
 			JNE     CICLO
 			mov		ah, 02h					; coloca o caracter lido no ecra
 			mov		dl, [JogadorAtual]
+
+			; ; MOV AL, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+			; ; MOV AH, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the variable into AH
+
+			; ;(POSy - 1)*160+POSx
+
+			; mov cl, byte ptr [POSx]     ; Store POSx in CL
+			; mov al, byte ptr [POSy]     ; Store POSy in AL
+
+			; ; dec al                      ; Decrement AL by 1 to calculate (POSy - 1)
+
+			; mov bl, al                  ; Store (POSy - 1) in BL temporarily
+			; mov al, 160                 ; Load the constant value 160 into AL
+
+			; mul bl                      ; Multiply AL by BL
+
+			; mov ch, 0
+			; add ax, cx                  ; Add POSx to the result (stored in AX)
+
+			; ; The result is now stored in AX
+
+
+			; mov bx, ax
+
+			; ; The result is now stored in AX      
+
 			; MOV AL, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
-			; MOV AH, BYTE PTR [JogadorAtual+1]  ; Load the color attribute from the variable into AH
+			; MOV AH, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
 
-			; Set cursor position using BIOS interrupt 10h
-			; MOV BH, 0   ; Page number (usually 0)
-			; MOV DL, POSx  ; Column position (X coordinate)
-			; MOV DH, POSy  ; Row position (Y coordinate)
-			; MOV AH, 02h  ; BIOS interrupt 10h function 02h - Set Cursor Position
-			; INT 10h     ; Call BIOS interrupt 10h to set the cursor position
+			; mov es:[bx], al
+			; mov es:[bx+1], ah			
 
-			; ; Display the character using BIOS interrupt 10h
-			; MOV AH, 0Eh  ; Display function code (0Eh - Teletype Output)
-			; INT 10h     ; Call BIOS interrupt 10h to display the character and color attribute
+; ciclo_mostra_jogada:			
 			
 			int		21H	
 			jmp 	PROCURA_VITORIA_TAB
@@ -598,6 +630,8 @@ MUDA_PARA_TAB_9:
 
 MUDA_JOGADOR_PARA_X:
 			mov 	byte ptr [JogadorAtual], 'X'
+			; mov 	byte ptr [JogadorAtual_Cor], 1h
+
 			; MOV AL, 'X' ; Move the character to AL register
 			; MOV AH, 1Fh      ; Move the color attribute to AH register
 			; MOV BYTE PTR [JogadorAtual], AL ; Store the character in the video memory
@@ -605,6 +639,8 @@ MUDA_JOGADOR_PARA_X:
 
 			;GARANTIR QUE NAO VAI PARA QUADRADOS QUE JA TEM WINS
 			mov     bl, proximoTab
+
+			mov 	dh, [contador_gerais]  ; Load the byte value from the memory location pointed to by contador_gerais into al
 
 			;al = 10 - bl
 			mov    	al, 10
@@ -621,6 +657,7 @@ MUDA_JOGADOR_PARA_X:
 			cmp     [Vitorias_Gerais+si], 1
 			jne     fim_do_loop_O
 
+			inc 	dh
 			inc     si
 			mov  	bx, si
 
@@ -636,17 +673,22 @@ MUDA_JOGADOR_PARA_X:
 			mov   	cx, ax
 
 			xor     si, si
+			mov  	bx, si
 	confirma_que_pode_ir_para_tab_O_2:
 			
 			cmp     [Vitorias_Gerais+si], 1
 			jne     fim_do_loop_O
 
+			inc 	dh
 			inc     si
 			mov  	bx, si
 
 			loop confirma_que_pode_ir_para_tab_O_2
 
 	fim_do_loop_O:
+
+			cmp 	dh, 8
+			jae     PROCURA_VITORIA_TOTAL
 			mov 	bh, 0
 			dec     num_jogadas
 			inc     bl
@@ -671,6 +713,7 @@ MUDA_JOGADOR_PARA_X:
 			je      MUDA_PARA_TAB_9
 MUDA_JOGADOR_PARA_O:
 			mov 	byte ptr [JogadorAtual], 'O'
+			; mov     byte ptr [JogadorAtual_Cor], Eh
 
 			; MOV AL, 'O' ; Move the character to AL register
 			; MOV AH, 0Eh       ; Move the color attribute to AH register
@@ -679,6 +722,8 @@ MUDA_JOGADOR_PARA_O:
 
 			;GARANTIR QUE NAO VAI PARA QUADRADOS QUE JA TEM WINS
 			mov     bl, proximoTab
+
+			mov 	dh, [contador_gerais]  ; Load the byte value from the memory location pointed to by contador_gerais into al
 
 			;al = 10 - bl
 			mov    	al, 10
@@ -694,7 +739,8 @@ MUDA_JOGADOR_PARA_O:
 			
 			cmp     [Vitorias_Gerais+si], 1
 			jne     fim_do_loop_X
-
+			
+			inc 	dh
 			inc     si
 			mov  	bx, si
 
@@ -710,18 +756,22 @@ MUDA_JOGADOR_PARA_O:
 			mov   	cx, ax
 
 			xor 	si, si
-
+			mov  	bx, si
 	confirma_que_pode_ir_para_tab_X_2:
 
 			cmp     [Vitorias_Gerais+si], 1
 			jne     fim_do_loop_X
 
+			inc 	dh
 			inc 	si
 			mov  	bx, si
 
 			loop confirma_que_pode_ir_para_tab_X_2
 
 	fim_do_loop_X:
+
+			cmp 	dh, 8
+			jae     PROCURA_VITORIA_TOTAL
 			mov   	bh, 0
 			dec     num_jogadas
 			inc     bl
@@ -747,6 +797,10 @@ MUDA_JOGADOR_PARA_O:
 
 ;############################################ TODA A LOGICA DO TABULEIRO 1 #############################
 PROCURA_VITORIA_TAB_1_INICIO:
+			inc		contador1
+			mov 	al, contador1
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_1
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 4
@@ -756,7 +810,12 @@ PROCURA_VITORIA_TAB_1_INICIO:
 			cmp     al, 8
 			je      PROCURA_VITORIA_TAB_1_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_1:
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 0
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_1_COLUNA_1:
 			cmp     ah, 2
 			je      PROCURA_VITORIA_TAB_1_POS_1
@@ -1485,11 +1544,15 @@ MOSTRA_VITORIAS_MAIN_1:
 		mov		ah, 02h				; coloca o caracter lido no ecra
 		mov		dl, [JogadorAtual]
 		int		21H	
-		jmp 	MUDA_JOGADOR
+		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################### TODA A LOGICA DO TABULEIRO 2 ###############################
 
 PROCURA_VITORIA_TAB_2_INICIO:
+			inc		contador2
+			mov 	al, contador2
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_2
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 13
@@ -1499,7 +1562,12 @@ PROCURA_VITORIA_TAB_2_INICIO:
 			cmp     al, 17
 			je      PROCURA_VITORIA_TAB_2_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_2:
+			mov  ax, 0
+			mov  al, 1             ; Move the value 1 into the AL register
+			mov  si, 1
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_2_COLUNA_1:
 			cmp     ah, 2
 			je      PROCURA_VITORIA_TAB_2_POS_1
@@ -2081,6 +2149,7 @@ PROCURA_VITORIA_TAB_2_COMB_3_FIM_O:
 			mov  al, 1              ; Move the value 1 into the AL register
 			mov  si, 1
 			mov  [Vitorias_O+si], al   ; Move the value from AL into the memory location Vitorias_O
+			mov  [Vitorias_Gerais+si], al
 			; jmp   MUDA_JOGADOR
 			jmp 	MOSTRA_VITORIAS_MAIN_2
 	endComparacao_2_comb_3_O:
@@ -2244,11 +2313,15 @@ MOSTRA_VITORIAS_MAIN_2:
 		mov		ah, 02h				; coloca o caracter lido no ecra
 		mov		dl, [JogadorAtual]
 		int		21H	
-		jmp 	MUDA_JOGADOR
+		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################### TODA A LOGICA DO TABULEIRO 3 ###############################
 
 PROCURA_VITORIA_TAB_3_INICIO:
+			inc		contador3
+			mov 	al, contador3
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_3
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 22
@@ -2258,7 +2331,12 @@ PROCURA_VITORIA_TAB_3_INICIO:
 			cmp     al, 26
 			je      PROCURA_VITORIA_TAB_3_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_3:
+			mov  ax, 0
+			mov  al, 1             ; Move the value 1 into the AL register
+			mov  si, 2
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_3_COLUNA_1:
 			cmp     ah, 2
 			je      PROCURA_VITORIA_TAB_3_POS_1
@@ -3004,10 +3082,14 @@ MOSTRA_VITORIAS_MAIN_3:
 		mov		ah, 02h				; coloca o caracter lido no ecra
 		mov		dl, [JogadorAtual]
 		int		21H	
-		jmp 	MUDA_JOGADOR
+		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 4 #############################
 PROCURA_VITORIA_TAB_4_INICIO:
+			inc		contador4
+			mov 	al, contador4
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_4
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 4
@@ -3017,7 +3099,12 @@ PROCURA_VITORIA_TAB_4_INICIO:
 			cmp     al, 8
 			je      PROCURA_VITORIA_TAB_4_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_4:
+			mov  ax, 0
+			mov  al, 1             ; Move the value 1 into the AL register
+			mov  si, 3
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_4_COLUNA_1:
 			cmp     ah, 6
 			je      PROCURA_VITORIA_TAB_4_POS_1
@@ -3763,10 +3850,14 @@ MOSTRA_VITORIAS_MAIN_4:
 		mov		ah, 02h				; coloca o caracter lido no ecra
 		mov		dl, [JogadorAtual]
 		int		21H	
-		jmp 	MUDA_JOGADOR
+		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 5 #############################
 PROCURA_VITORIA_TAB_5_INICIO:
+			inc		contador5
+			mov 	al, contador5
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_5
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 13
@@ -3776,7 +3867,12 @@ PROCURA_VITORIA_TAB_5_INICIO:
 			cmp     al, 17
 			je      PROCURA_VITORIA_TAB_5_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_5:
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 4
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_5_COLUNA_1:
 			cmp     ah, 6
 			je      PROCURA_VITORIA_TAB_5_POS_1
@@ -4522,10 +4618,14 @@ MOSTRA_VITORIAS_MAIN_5:
 		mov		ah, 02h				; coloca o caracter lido no ecra
 		mov		dl, [JogadorAtual]
 		int		21H	
-		jmp 	MUDA_JOGADOR
+		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 6 #############################
 PROCURA_VITORIA_TAB_6_INICIO:
+			inc		contador6
+			mov 	al, contador6
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_6
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 22
@@ -4535,7 +4635,12 @@ PROCURA_VITORIA_TAB_6_INICIO:
 			cmp     al, 26
 			je      PROCURA_VITORIA_TAB_6_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_6:
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 5
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_6_COLUNA_1:
 			cmp     ah, 6
 			je      PROCURA_VITORIA_TAB_6_POS_1
@@ -5281,10 +5386,14 @@ MOSTRA_VITORIAS_MAIN_6:
 		mov		ah, 02h				; coloca o caracter lido no ecra
 		mov		dl, [JogadorAtual]
 		int		21H	
-		jmp 	MUDA_JOGADOR
+		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 7 #############################
 PROCURA_VITORIA_TAB_7_INICIO:
+			inc		contador7
+			mov 	al, contador7
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_7
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 4
@@ -5294,7 +5403,12 @@ PROCURA_VITORIA_TAB_7_INICIO:
 			cmp     al, 8
 			je      PROCURA_VITORIA_TAB_7_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_7:
+			mov  ax, 0
+			mov  al, 1              ; Move the value 1 into the AL register
+			mov  si, 6
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_7_COLUNA_1:
 			cmp     ah, 10
 			je      PROCURA_VITORIA_TAB_7_POS_1
@@ -6040,10 +6154,14 @@ MOSTRA_VITORIAS_MAIN_7:
 		mov		ah, 02h				; coloca o caracter lido no ecra
 		mov		dl, [JogadorAtual]
 		int		21H	
-		jmp 	MUDA_JOGADOR
+		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 8 #############################
 PROCURA_VITORIA_TAB_8_INICIO:
+			inc		contador8
+			mov 	al, contador8
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_8
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 13
@@ -6053,7 +6171,12 @@ PROCURA_VITORIA_TAB_8_INICIO:
 			cmp     al, 17
 			je      PROCURA_VITORIA_TAB_8_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_8:
+			mov  ax, 0
+			mov  al, 1             ; Move the value 1 into the AL register
+			mov  si, 7
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_8_COLUNA_1:
 			cmp     ah, 10
 			je      PROCURA_VITORIA_TAB_8_POS_1
@@ -6799,10 +6922,14 @@ MOSTRA_VITORIAS_MAIN_8:
 		mov		ah, 02h				; coloca o caracter lido no ecra
 		mov		dl, [JogadorAtual]
 		int		21H	
-		jmp 	MUDA_JOGADOR
+		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 9 #############################
 PROCURA_VITORIA_TAB_9_INICIO:
+			inc		contador9
+			mov 	al, contador9
+			cmp 	al, 8
+			je 		CONFIRMA_EMPATE_TAB_9
 			mov     al, POSx
 			mov     ah, POSy
 			cmp     al, 22
@@ -6812,7 +6939,12 @@ PROCURA_VITORIA_TAB_9_INICIO:
 			cmp     al, 26
 			je      PROCURA_VITORIA_TAB_9_COLUNA_3
 			jmp     CICLO
-
+CONFIRMA_EMPATE_TAB_9:
+			mov  ax, 0
+			mov  al, 1             ; Move the value 1 into the AL register
+			mov  si, 8
+			mov  [Vitorias_Gerais+si], al
+			jmp 	MUDA_JOGADOR
 PROCURA_VITORIA_TAB_9_COLUNA_1:
 			cmp     ah, 10
 			je      PROCURA_VITORIA_TAB_9_POS_1
@@ -7573,6 +7705,11 @@ MUDA_JOGADOR:
 
 
 PROCURA_VITORIA_TOTAL:
+			; inc 	Empate_geral
+			; mov 	al, Empate_geral
+			; cmp 	al, 9
+			; jmp 	PREPARA_FIM_DO_JOGO_EMPATE
+
 			mov 	al, JogadorAtual
 			cmp 	al, 'O'
 			je      PROCURA_VITORIA_TOTAL_O
@@ -7602,7 +7739,7 @@ PROCURA_VITORIA_TOTAL_COMB_1_X:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_1_X:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_2_X
 PROCURA_VITORIA_TOTAL_COMB_2_X:
@@ -7628,7 +7765,7 @@ PROCURA_VITORIA_TOTAL_COMB_2_X:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_2_X:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_3_X
 PROCURA_VITORIA_TOTAL_COMB_3_X:
@@ -7654,7 +7791,7 @@ PROCURA_VITORIA_TOTAL_COMB_3_X:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_3_X:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_4_X
 PROCURA_VITORIA_TOTAL_COMB_4_X:
@@ -7680,7 +7817,7 @@ PROCURA_VITORIA_TOTAL_COMB_4_X:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_4_X:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_5_X
 PROCURA_VITORIA_TOTAL_COMB_5_X:
@@ -7706,7 +7843,7 @@ PROCURA_VITORIA_TOTAL_COMB_5_X:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_5_X:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_6_X
 PROCURA_VITORIA_TOTAL_COMB_6_X:
@@ -7732,7 +7869,7 @@ PROCURA_VITORIA_TOTAL_COMB_6_X:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_6_X:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_7_X
 PROCURA_VITORIA_TOTAL_COMB_7_X:
@@ -7758,7 +7895,7 @@ PROCURA_VITORIA_TOTAL_COMB_7_X:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_7_X:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_8_X
 PROCURA_VITORIA_TOTAL_COMB_8_X:
@@ -7784,7 +7921,7 @@ PROCURA_VITORIA_TOTAL_COMB_8_X:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_8_X:
 			jmp		MUDA_JOGADOR
 
@@ -7813,7 +7950,7 @@ PROCURA_VITORIA_TOTAL_COMB_1_O:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_1_O:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_2_O
 PROCURA_VITORIA_TOTAL_COMB_2_O:
@@ -7839,7 +7976,7 @@ PROCURA_VITORIA_TOTAL_COMB_2_O:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_2_O:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_3_O
 PROCURA_VITORIA_TOTAL_COMB_3_O:
@@ -7865,7 +8002,7 @@ PROCURA_VITORIA_TOTAL_COMB_3_O:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_3_O:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_4_O
 PROCURA_VITORIA_TOTAL_COMB_4_O:
@@ -7891,7 +8028,7 @@ PROCURA_VITORIA_TOTAL_COMB_4_O:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_4_O:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_5_O
 PROCURA_VITORIA_TOTAL_COMB_5_O:
@@ -7917,7 +8054,7 @@ PROCURA_VITORIA_TOTAL_COMB_5_O:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_5_O:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_6_O
 PROCURA_VITORIA_TOTAL_COMB_6_O:
@@ -7943,7 +8080,7 @@ PROCURA_VITORIA_TOTAL_COMB_6_O:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_6_O:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_7_O
 PROCURA_VITORIA_TOTAL_COMB_7_O:
@@ -7969,7 +8106,7 @@ PROCURA_VITORIA_TOTAL_COMB_7_O:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_7_O:
 			jmp		PROCURA_VITORIA_TOTAL_COMB_8_O
 PROCURA_VITORIA_TOTAL_COMB_8_O:
@@ -7995,13 +8132,19 @@ PROCURA_VITORIA_TOTAL_COMB_8_O:
 
 			;Devolver o necessario para depois mostrar o vencedor
 
-			jmp 	PREPARA_FIM_DO_JOGO
+			jmp 	PREPARA_FIM_DO_JOGO_VITORIA
 	endComparacao_total_comb_8_O:
 			jmp		MUDA_JOGADOR
 
 
-PREPARA_FIM_DO_JOGO:
+PREPARA_FIM_DO_JOGO_VITORIA:
 
+			; jmp		MUDA_JOGADOR
+			jmp 	fim
+
+PREPARA_FIM_DO_JOGO_EMPATE:
+
+			; jmp		MUDA_JOGADOR
 			jmp 	fim
 
 ESTEND_JOGO:		;Verificar se pode andar
@@ -8234,7 +8377,6 @@ JOGADOR2:
 		int 21h                ; Call interrupt 21h to print the string
 		inc Escreve_nomes
 		jmp IMP_NOMES_JOGO
-
 fim:
 	RET
 IMP_NOMES_JOGO endp
