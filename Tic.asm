@@ -29,7 +29,7 @@ dseg	segment para public 'data'
 		Simbolo1		db      'X'
 		Simbolo2		db      'O'
 		JogadorAtual    db      'X'
-		JogadorAtual_Cor    db     1h
+		JogadorAtual_Cor    db    9h
 		JogoTerminado 	db 		?       ;0 Empate            1 Vitoria
 		Winner          db 		?
 		Winner_nome     db 		'???????????????????????????$'
@@ -135,7 +135,7 @@ apaga:		mov		byte ptr es:[bx],' '
 			ret
 apaga_ecran	endp
 
-;######################## AFONSO ################
+;##################################################################
 IMP_FICH_NOMES PROC
 		;abre ficheiro
         mov     ah,3dh		; Open File function
@@ -275,10 +275,10 @@ CICLO:
 			mov		Car, al			; Guarda o Caracter que est� na posi��o do Cursor
 			mov		Cor, ah			; Guarda a cor que est� na posi��o do Cursor
 		
-			goto_xy	78,0			; Mostra o caractr que estava na posi��o do AVATAR
-			mov		ah, 02h			; IMPRIME caracter da posi��o no canto
-			mov		dl, Car	
-			int		21H	
+			; goto_xy	78,0			; Mostra o caractr que estava na posi��o do AVATAR
+			; mov		ah, 02h			; IMPRIME caracter da posi��o no canto
+			; mov		dl, Car	
+			; int		21H	
 	
 			goto_xy	POSx,POSy	; Vai para posi��o do cursor
 			
@@ -523,39 +523,45 @@ MOSTRA_JOGADA:
 			mov		CL, Car
 			cmp		CL, 32		; S� escreve se for espa�o em branco
 			JNE     CICLO
-			mov		ah, 02h					; coloca o caracter lido no ecra
-			mov		dl, [JogadorAtual]
-
-			; ; MOV AL, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
-			; ; MOV AH, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the variable into AH
-
-			; ;(POSy - 1)*160+POSx
-
-			; mov cl, byte ptr [POSx]     ; Store POSx in CL
-			; mov al, byte ptr [POSy]     ; Store POSy in AL
-
-			; ; dec al                      ; Decrement AL by 1 to calculate (POSy - 1)
-
-			; mov bl, al                  ; Store (POSy - 1) in BL temporarily
-			; mov al, 160                 ; Load the constant value 160 into AL
-
-			; mul bl                      ; Multiply AL by BL
-
-			; mov ch, 0
-			; add ax, cx                  ; Add POSx to the result (stored in AX)
-
-			; ; The result is now stored in AX
-
-
-			; mov bx, ax
-
-			; ; The result is now stored in AX      
+			; mov		ah, 02h					; coloca o caracter lido no ecra
+			; mov		dl, [JogadorAtual]
 
 			; MOV AL, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
-			; MOV AH, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+			; MOV AH, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the variable into AH
 
-			; mov es:[bx], al
-			; mov es:[bx+1], ah			
+			;(POSy - 1)*160+POSx
+
+			mov ax, 0
+			mov cx, 0
+
+			mov cl, byte ptr [POSx]     ; Store POSx in CL
+
+			add cl, cl
+
+			mov al, byte ptr [POSy]     ; Store POSy in AL
+
+			; dec al                      ; Decrement AL by 1 to calculate (POSy - 1)
+
+			mov bl, al                  ; Store (POSy - 1) in BL temporarily
+			mov al, 160                 ; Load the constant value 160 into AL
+
+			mul bl                      ; Multiply AL by BL
+
+			mov ch, 0
+			add ax, cx                  ; Add POSx to the result (stored in AX)
+
+			; The result is now stored in AX
+
+
+			mov bx, ax
+
+			; The result is now stored in AX      
+
+			MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+			MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+			mov es:[bx], ah
+			mov es:[bx+1], al	
 
 ; ciclo_mostra_jogada:			
 			
@@ -634,7 +640,8 @@ MUDA_PARA_TAB_9:
 
 MUDA_JOGADOR_PARA_X:
 			mov 	byte ptr [JogadorAtual], 'X'
-			; mov 	byte ptr [JogadorAtual_Cor], 1h
+			mov 	al, 9h
+			mov 	byte ptr [JogadorAtual_Cor], al
 
 			; MOV AL, 'X' ; Move the character to AL register
 			; MOV AH, 1Fh      ; Move the color attribute to AH register
@@ -717,7 +724,8 @@ MUDA_JOGADOR_PARA_X:
 			je      MUDA_PARA_TAB_9
 MUDA_JOGADOR_PARA_O:
 			mov 	byte ptr [JogadorAtual], 'O'
-			; mov     byte ptr [JogadorAtual_Cor], Eh
+			mov 	al, 0Eh
+			mov     byte ptr [JogadorAtual_Cor], al
 
 			; MOV AL, 'O' ; Move the character to AL register
 			; MOV AH, 0Eh       ; Move the color attribute to AH register
@@ -1545,13 +1553,26 @@ PROCURA_VITORIA_TAB_1_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_1:
-		goto_xy 	55, 6	
+		mov 	POSx, 55
+		mov     POSy, 6
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1070
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################### TODA A LOGICA DO TABULEIRO 2 ###############################
@@ -2318,13 +2339,26 @@ PROCURA_VITORIA_TAB_2_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_2:
-		goto_xy 	57, 6	
+		mov 	POSx, 57
+		mov     POSy, 6
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1074
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################### TODA A LOGICA DO TABULEIRO 3 ###############################
@@ -3091,13 +3125,26 @@ PROCURA_VITORIA_TAB_3_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_3:
-		goto_xy 	59, 6	
+		mov 	POSx, 59
+		mov     POSy, 6
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1078
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 4 #############################
@@ -3863,13 +3910,26 @@ PROCURA_VITORIA_TAB_4_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_4:
-		goto_xy 	55, 7	
+		mov 	POSx, 55
+		mov     POSy, 7
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1230
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 5 #############################
@@ -4635,13 +4695,26 @@ PROCURA_VITORIA_TAB_5_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_5:
-		goto_xy 	57, 7	
+		mov 	POSx, 57
+		mov     POSy, 7
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1234
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 6 #############################
@@ -5407,13 +5480,26 @@ PROCURA_VITORIA_TAB_6_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_6:
-		goto_xy 	59, 7	
+		mov 	POSx, 59
+		mov     POSy, 7
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1238
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 7 #############################
@@ -6179,14 +6265,28 @@ PROCURA_VITORIA_TAB_7_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_7:
-		goto_xy 	55, 8	
+		mov 	POSx, 55
+		mov     POSy, 8
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1390
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
+
 
 ;############################################ TODA A LOGICA DO TABULEIRO 8 #############################
 PROCURA_VITORIA_TAB_8_INICIO:
@@ -6951,14 +7051,28 @@ PROCURA_VITORIA_TAB_8_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_8:
-		goto_xy 	57, 8	
+		mov 	POSx, 57
+		mov     POSy, 8
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1394
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
+
 
 ;############################################ TODA A LOGICA DO TABULEIRO 9 #############################
 PROCURA_VITORIA_TAB_9_INICIO:
@@ -7723,15 +7837,28 @@ PROCURA_VITORIA_TAB_9_COMB_8_FIM_O:
 			jmp		MUDA_JOGADOR
 
 MOSTRA_VITORIAS_MAIN_9:
-		goto_xy 	59, 8	
+		mov 	POSx, 59
+		mov     POSy, 8
+		goto_xy	POSx, POSy
 		mov		CL, Car
 		cmp		CL, 32		; S� escreve se for espa�o em branco
 		JNE     MUDA_JOGADOR
-		mov		ah, 02h				; coloca o caracter lido no ecra
-		mov		dl, [JogadorAtual]
-		int		21H	
+
+		mov bx, 0
+		mov bx, 1398
+
+		MOV AH, BYTE PTR [JogadorAtual]    ; Load the character from the variable into AL
+		MOV AL, BYTE PTR [JogadorAtual_Cor]  ; Load the color attribute from the 
+
+		mov es:[bx], ah
+		mov es:[bx+1], al		
+		
+		int		21H		
+		; mov		ah, 02h				; coloca o caracter lido no ecra
+		; mov		dl, [JogadorAtual]
+		; int		21H	
 		jmp 	PROCURA_VITORIA_TOTAL
-		; jmp 	MUDA_JOGADOR
+
 
 MUDA_JOGADOR:
 			mov     al, num_jogadas
@@ -8422,9 +8549,17 @@ IMP_NOMES_JOGO PROC
 
 JOGADOR1:
 		goto_xy POSx, POSy
-		mov dl, 'X'            ; Print 'X' character
-		mov ah, 02h            ; Set the function to display a character
+		; mov dl, 'X'            ; Print 'X' character
+		MOV AH, 'X'
+		MOV AL, 9h
+
+		mov bx, 552
+
+		mov es:[bx], ah
+		mov es:[bx+1], al	
 		int 21h                ; Call interrupt 21h to print the character
+
+		mov ah, 02h            ; Set the function to display a character
 		inc POSx               ; Increment POSx to move the cursor position
 		mov dl, '-'            ; Print '-' character
 		int 21h                ; Call interrupt 21h to print the character
@@ -8436,9 +8571,17 @@ JOGADOR1:
 
 JOGADOR2:
 		goto_xy POSx, POSy
-		mov dl, 'O'            ; Print 'O' character
-		mov ah, 02h            ; Set the function to display a character
+		; mov dl, 'O'            ; Print 'O' character
+		MOV AH, 'O'
+		MOV AL, 0Eh
+
+		mov bx, 712
+
+		mov es:[bx], ah
+		mov es:[bx+1], al	
 		int 21h                ; Call interrupt 21h to print the character
+
+		mov ah, 02h            ; Set the function to display a character
 		inc POSx               ; Increment POSx to move the cursor position
 		mov dl, '-'            ; Print '-' character
 		int 21h                ; Call interrupt 21h to print the character
@@ -8561,9 +8704,18 @@ ESCREVE_VENCEDOR_SIMBOLO:
 		mov     POSx, 34
 		mov     POSy, 8
 		goto_xy POSx, POSy
-		mov dl, [Winner]
-		mov ah, 02h            ; Set the function to display a character
+		; mov dl, [Winner]
+		; mov ah, 02h            ; Set the function to display a character
+
+		MOV AH, [Winner]
+		MOV AL, [JogadorAtual_Cor]
+
+		mov bx, 1348
+
+		mov es:[bx], ah
+		mov es:[bx+1], al	
 		int 21h                ; Call interrupt 21h to print the character
+		
 		jmp fim
 ESCREVE_EMPATE:
 		mov     POSx, 32
