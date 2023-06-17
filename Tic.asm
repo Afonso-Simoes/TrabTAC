@@ -47,7 +47,7 @@ dseg	segment para public 'data'
 		car_fich        db      ?
 
 		ultimo_num_aleat dw 	0
-		num_jogadas     db      79
+		num_jogadas     db      80
 
 		combinacao1     db      1, 1, 1, ?, ?, ?, ?, ?, ?
 		combinacao2     db      ?, ?, ?, 1, 1, 1, ?, ?, ?						;#############
@@ -484,35 +484,35 @@ DIREITA:
 			inc		POSx		;Direita
 			jmp		CICLO
 
-;########################### CODIGO PARA TESTES ####################################################
-MOSTRA_JOGADA_TESTES:
-			goto_xy	POSx, POSy
-			mov		CL, Car
-			cmp		CL, 32		; S� escreve se for espa�o em branco
-			JNE     CICLO
-			mov		ah, 02h				; coloca o caracter lido no ecra
-			mov		dl, [JogadorAtual]
-			int		21H	
-			jmp     MUDA_JOGADOR_TESTE
+; ;########################### CODIGO PARA TESTES ####################################################
+; MOSTRA_JOGADA_TESTES:
+; 			goto_xy	POSx, POSy
+; 			mov		CL, Car
+; 			cmp		CL, 32		; S� escreve se for espa�o em branco
+; 			JNE     CICLO
+; 			mov		ah, 02h				; coloca o caracter lido no ecra
+; 			mov		dl, [JogadorAtual]
+; 			int		21H	
+; 			jmp     MUDA_JOGADOR_TESTE
 
-MUDA_JOGADOR_TESTE:
-			mov     al, num_jogadas
-			cmp     al, 0
-			je      fim
-			mov 	al, JogadorAtual
-			cmp 	al, 'O'
-			je      MUDA_JOGADOR_PARA_X_TESTE
-			cmp 	al, 'X'
-			je      MUDA_JOGADOR_PARA_O_TESTE
+; MUDA_JOGADOR_TESTE:
+; 			mov     al, num_jogadas
+; 			cmp     al, 0
+; 			je      fim
+; 			mov 	al, JogadorAtual
+; 			cmp 	al, 'O'
+; 			je      MUDA_JOGADOR_PARA_X_TESTE
+; 			cmp 	al, 'X'
+; 			je      MUDA_JOGADOR_PARA_O_TESTE
 
-MUDA_JOGADOR_PARA_X_TESTE:
-			mov 	byte ptr [JogadorAtual], 'X'
-			dec     num_jogadas
-			jmp     CICLO
-MUDA_JOGADOR_PARA_O_TESTE:
-			mov 	byte ptr [JogadorAtual], 'O'
-			dec     num_jogadas
-			jmp     CICLO
+; MUDA_JOGADOR_PARA_X_TESTE:
+; 			mov 	byte ptr [JogadorAtual], 'X'
+; 			dec     num_jogadas
+; 			jmp     CICLO
+; MUDA_JOGADOR_PARA_O_TESTE:
+; 			mov 	byte ptr [JogadorAtual], 'O'
+; 			dec     num_jogadas
+; 			jmp     CICLO
 
 ;####################################################################################################
 ;##################### DAQUI PARA A FRENTE É A LOGICA DAS VITORIAS E DO JOGO  #######################
@@ -5780,7 +5780,7 @@ PINTA_FUNDO_TAB_6:
 
 		loop ciclo_pinta_linha_2_TAB_6
 
-		mov  	bx, 1482
+		mov  	bx, 1322
 		mov 	cx, 7
 	ciclo_pinta_linha_3_TAB_6:
 
