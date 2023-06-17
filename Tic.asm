@@ -1569,10 +1569,59 @@ MOSTRA_VITORIAS_MAIN_1:
 		mov es:[bx], ah
 		mov es:[bx+1], al		
 		
-		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		int		21H
+		jmp 	ESCOLHE_COR_TAB_1
+ESCOLHE_COR_TAB_1:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_1
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_1
+COLOCA_COR_X_TAB_1:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_1
+
+COLOCA_COR_O_TAB_1:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_1
+PINTA_FUNDO_TAB_1:
+		mov  	bx, 326
+		mov 	cx, 7
+		MOV     AH, ' '
+	ciclo_pinta_linha_1_TAB_1:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_1
+
+		mov  	bx, 486
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_1:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_1
+
+		mov  	bx, 646
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_1:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_1	
+
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################### TODA A LOGICA DO TABULEIRO 2 ###############################
@@ -2355,10 +2404,59 @@ MOSTRA_VITORIAS_MAIN_2:
 		mov es:[bx], ah
 		mov es:[bx+1], al		
 		
-		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		int		21H
+		jmp 	ESCOLHE_COR_TAB_2
+ESCOLHE_COR_TAB_2:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_2
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_2
+COLOCA_COR_X_TAB_2:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_2
+
+COLOCA_COR_O_TAB_2:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_2
+PINTA_FUNDO_TAB_2:
+		mov  	bx, 344
+		mov 	cx, 7
+		MOV     AH, ' '
+	ciclo_pinta_linha_1_TAB_2:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_2
+
+		mov  	bx, 504
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_2:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_2
+
+		mov  	bx, 664
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_2:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_2
+
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################### TODA A LOGICA DO TABULEIRO 3 ###############################
@@ -3141,10 +3239,59 @@ MOSTRA_VITORIAS_MAIN_3:
 		mov es:[bx], ah
 		mov es:[bx+1], al		
 		
-		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		int		21H	
+		jmp 	ESCOLHE_COR_TAB_3
+ESCOLHE_COR_TAB_3:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_3
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_3
+COLOCA_COR_X_TAB_3:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_3
+
+COLOCA_COR_O_TAB_3:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_3
+PINTA_FUNDO_TAB_3:
+		mov  	bx, 362
+		mov 	cx, 7
+		MOV     AH, ' ' 
+	ciclo_pinta_linha_1_TAB_3:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_3
+
+		mov  	bx, 522
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_3:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_3
+
+		mov  	bx, 682
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_3:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_3
+
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 4 #############################
@@ -3927,9 +4074,57 @@ MOSTRA_VITORIAS_MAIN_4:
 		mov es:[bx+1], al		
 		
 		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		jmp 	ESCOLHE_COR_TAB_4
+ESCOLHE_COR_TAB_4:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_4
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_4
+COLOCA_COR_X_TAB_4:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_4
+
+COLOCA_COR_O_TAB_4:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_4
+PINTA_FUNDO_TAB_4:
+		mov  	bx, 966
+		mov 	cx, 7
+		MOV     AH, ' '
+	ciclo_pinta_linha_1_TAB_4:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_4
+
+		mov  	bx, 1126
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_4:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_4
+
+		mov  	bx, 1286
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_4:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_4	
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 5 #############################
@@ -4712,9 +4907,57 @@ MOSTRA_VITORIAS_MAIN_5:
 		mov es:[bx+1], al		
 		
 		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		jmp 	ESCOLHE_COR_TAB_5
+ESCOLHE_COR_TAB_5:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_5
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_5
+COLOCA_COR_X_TAB_5:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_5
+
+COLOCA_COR_O_TAB_5:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_5
+PINTA_FUNDO_TAB_5:
+		mov  	bx, 984
+		mov 	cx, 7
+		MOV     AH, ' '
+	ciclo_pinta_linha_1_TAB_5:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_5
+
+		mov  	bx, 1144
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_5:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_5
+
+		mov  	bx, 1304
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_5:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_5
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 6 #############################
@@ -5497,9 +5740,57 @@ MOSTRA_VITORIAS_MAIN_6:
 		mov es:[bx+1], al		
 		
 		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		jmp 	ESCOLHE_COR_TAB_6
+ESCOLHE_COR_TAB_6:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_6
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_6
+COLOCA_COR_X_TAB_6:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_6
+
+COLOCA_COR_O_TAB_6:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_6
+PINTA_FUNDO_TAB_6:
+		mov  	bx, 1002
+		mov 	cx, 7
+		MOV     AH, ' ' 
+	ciclo_pinta_linha_1_TAB_6:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_6
+
+		mov  	bx, 1162
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_6:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_6
+
+		mov  	bx, 1482
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_6:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_6
 		jmp 	PROCURA_VITORIA_TOTAL
 
 ;############################################ TODA A LOGICA DO TABULEIRO 7 #############################
@@ -6282,9 +6573,57 @@ MOSTRA_VITORIAS_MAIN_7:
 		mov es:[bx+1], al		
 		
 		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		jmp 	ESCOLHE_COR_TAB_7
+ESCOLHE_COR_TAB_7:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_7
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_7
+COLOCA_COR_X_TAB_7:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_7
+
+COLOCA_COR_O_TAB_7:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_7
+PINTA_FUNDO_TAB_7:
+		mov  	bx, 1606
+		mov 	cx, 7
+		MOV     AH, ' '
+	ciclo_pinta_linha_1_TAB_7:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_7
+
+		mov  	bx, 1766
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_7:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_7
+
+		mov  	bx, 1926
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_7:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_7	
 		jmp 	PROCURA_VITORIA_TOTAL
 
 
@@ -7068,9 +7407,57 @@ MOSTRA_VITORIAS_MAIN_8:
 		mov es:[bx+1], al		
 		
 		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		jmp 	ESCOLHE_COR_TAB_8
+ESCOLHE_COR_TAB_8:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_8
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_8
+COLOCA_COR_X_TAB_8:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_8
+
+COLOCA_COR_O_TAB_8:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_8
+PINTA_FUNDO_TAB_8:
+		mov  	bx, 1624
+		mov 	cx, 7
+		MOV     AH, ' '
+	ciclo_pinta_linha_1_TAB_8:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_8
+
+		mov  	bx, 1784
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_8:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_8
+
+		mov  	bx, 1944
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_8:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_8
 		jmp 	PROCURA_VITORIA_TOTAL
 
 
@@ -7854,9 +8241,57 @@ MOSTRA_VITORIAS_MAIN_9:
 		mov es:[bx+1], al		
 		
 		int		21H		
-		; mov		ah, 02h				; coloca o caracter lido no ecra
-		; mov		dl, [JogadorAtual]
-		; int		21H	
+		jmp 	ESCOLHE_COR_TAB_9
+ESCOLHE_COR_TAB_9:
+		mov 	al, [JogadorAtual]
+		cmp 	al, 'X'
+		je 		COLOCA_COR_X_TAB_9
+		cmp	 	al, 'O'
+		je 		COLOCA_COR_O_TAB_9
+COLOCA_COR_X_TAB_9:
+		mov 	al, 019h
+		jmp 	PINTA_FUNDO_TAB_9
+
+COLOCA_COR_O_TAB_9:
+		mov 	al, 0EFh 
+		jmp 	PINTA_FUNDO_TAB_9
+PINTA_FUNDO_TAB_9:
+		mov  	bx, 1642
+		mov 	cx, 7
+		MOV     AH, ' ' 
+	ciclo_pinta_linha_1_TAB_9:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_1_TAB_9
+
+		mov  	bx, 1802
+		mov 	cx, 7
+	ciclo_pinta_linha_2_TAB_9:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_2_TAB_9
+
+		mov  	bx, 1962
+		mov 	cx, 7
+	ciclo_pinta_linha_3_TAB_9:
+
+		mov es:[bx], ah
+		mov es:[bx+1], al
+
+		inc bx
+		inc bx
+
+		loop ciclo_pinta_linha_3_TAB_9
 		jmp 	PROCURA_VITORIA_TOTAL
 
 
@@ -8760,9 +9195,6 @@ Main  proc
 		goto_xy		0,0				;Mudar as coordenadas de inicio
 		call		IMP_FICH_NOMES    ;Abre o ficheiro dos nomes
 		call 		AVATAR		
-		; call		CalcAleat
-		; pop			ax ; vai buscar 'a pilha o numero aleatorio
-		; call        ATRIBUI_SIMBOLO      ;Atribui o simbolo de forma aleatória aos jogadores
 		call		apaga_ecran
 		call		IMP_FICH		;Abre o ficheiro de texto e imprime
 		call        IMP_NOMES_JOGO		;Escreve o nome dos jogadores e os seus simbolos
